@@ -21,42 +21,42 @@
             <div class="info-location">Leopoldshafen</div>
           </div>
           <div v-if="weatherError" class="card-error">
-            <UIcon name="i-lucide-alert-circle" class="error-icon" />
+            <UIcon name="i-heroicons-alert-circle" class="error-icon" />
             <p>{{ weatherError }}</p>
           </div>
         </div>
         <div class="card-arrow">
-          <UIcon name="i-lucide-arrow-right" />
+          <UIcon name="i-heroicons-arrow-right" />
         </div>
       </div>
 
       <!-- Appointments Card -->
       <div class="stat-card calendar-card" @click="handleCalendarClick">
         <div class="card-icon-wrapper">
-          <UIcon name="i-lucide-calendar-days" class="card-icon" />
+          <UIcon name="i-heroicons-calendar-days" class="card-icon" />
         </div>
         <div class="card-content">
           <h3 class="card-title">Termine Heute</h3>
           <div v-if="authError" class="card-error">
-            <UIcon name="i-lucide-alert-circle" class="error-icon" />
+            <UIcon name="i-heroicons-alert-circle" class="error-icon" />
             <p>{{ authError }}</p>
           </div>
           <div v-else-if="!isAuthenticated" class="auth-needed">
             <button class="google-signin-btn" @click.stop="signIn">
-              <UIcon name="i-lucide-log-in" />
+              <UIcon name="i-heroicons-log-in" />
               <span>Anmelden</span>
             </button>
           </div>
           <div v-else-if="calendarError" class="card-error">
-            <UIcon name="i-lucide-alert-circle" class="error-icon" />
+            <UIcon name="i-heroicons-alert-circle" class="error-icon" />
             <p>{{ calendarError }}</p>
           </div>
           <div v-else-if="isLoadingCalendar" class="card-loading">
-            <UIcon name="i-lucide-loader-2" class="loading-spinner" />
+            <UIcon name="i-heroicons-loader-2" class="loading-spinner" />
             <span>Laden...</span>
           </div>
           <div v-else-if="todayAppointments.length === 0" class="card-empty">
-            <UIcon name="i-lucide-calendar-check" />
+            <UIcon name="i-heroicons-calendar-check" />
             <span>Keine Termine</span>
           </div>
           <div v-else class="card-list">
@@ -70,49 +70,49 @@
           </div>
         </div>
         <div class="card-arrow">
-          <UIcon name="i-lucide-arrow-right" />
+          <UIcon name="i-heroicons-arrow-right" />
         </div>
       </div>
 
       <!-- Tasks Card -->
       <div class="stat-card tasks-card" @click="handleTasksClick">
         <div class="card-icon-wrapper">
-          <UIcon name="i-lucide-list-checks" class="card-icon" />
+          <UIcon name="i-heroicons-list-checks" class="card-icon" />
         </div>
         <div class="card-content">
           <h3 class="card-title">Aufgaben</h3>
           <div v-if="!isTasksAuthenticated" class="auth-needed">
             <button class="google-signin-btn" @click.stop="signInTasks">
-              <UIcon name="i-lucide-log-in" />
+              <UIcon name="i-heroicons-log-in" />
               <span>Anmelden</span>
             </button>
           </div>
           <div v-else-if="tasksError" class="card-error">
-            <UIcon name="i-lucide-alert-circle" class="error-icon" />
+            <UIcon name="i-heroicons-alert-circle" class="error-icon" />
             <p>{{ tasksError }}</p>
             <div class="error-actions">
               <button v-if="tasksError.includes('anmelden')" class="error-retry-btn" @click.stop="signInTasks">
-                <UIcon name="i-lucide-refresh-cw" />
+                <UIcon name="i-heroicons-refresh-cw" />
                 Neu anmelden
               </button>
               <button class="error-help-btn" @click.stop="showTasksSetup = true">
-                <UIcon name="i-lucide-help-circle" />
+                <UIcon name="i-heroicons-help-circle" />
                 Hilfe
               </button>
             </div>
           </div>
           <div v-else-if="isLoadingTasks" class="card-loading">
-            <UIcon name="i-lucide-loader-2" class="loading-spinner" />
+            <UIcon name="i-heroicons-loader-2" class="loading-spinner" />
             <span>Laden...</span>
           </div>
           <div v-else-if="incompleteTasks.length === 0" class="card-empty">
-            <UIcon name="i-lucide-check-circle-2" />
+            <UIcon name="i-heroicons-check-circle" />
             <span>Keine Aufgaben</span>
           </div>
           <div v-else class="card-list">
             <div v-for="task in incompleteTasks.slice(0, 3)" :key="task.id" class="list-item task-list-item">
               <div class="task-checkbox" @click.stop="toggleTask(task)">
-                <UIcon name="i-lucide-circle" />
+                <UIcon name="i-heroicons-circle" />
               </div>
               <div class="item-title">{{ task.title }}</div>
             </div>
@@ -122,7 +122,37 @@
           </div>
         </div>
         <div class="card-arrow">
-          <UIcon name="i-lucide-arrow-right" />
+          <UIcon name="i-heroicons-arrow-right" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Navigation to New Features -->
+    <div class="feature-nav-section">
+      <div class="feature-nav-grid">
+        <div class="feature-nav-card routine-nav" @click="navigateTo('/routinen')">
+          <div class="fnav-icon">🌅</div>
+          <div class="fnav-content">
+            <h3>Routinen</h3>
+            <p>Morgen · Mittag · Abend</p>
+          </div>
+          <UIcon name="i-heroicons-arrow-right" class="fnav-arrow" />
+        </div>
+        <div class="feature-nav-card habits-nav" @click="navigateTo('/gewohnheiten')">
+          <div class="fnav-icon">🎯</div>
+          <div class="fnav-content">
+            <h3>Gewohnheiten</h3>
+            <p>Habits & Streaks tracken</p>
+          </div>
+          <UIcon name="i-heroicons-arrow-right" class="fnav-arrow" />
+        </div>
+        <div class="feature-nav-card grades-nav" @click="navigateTo('/noten')">
+          <div class="fnav-icon">📐</div>
+          <div class="fnav-content">
+            <h3>Noten</h3>
+            <p>Fächer & Durchschnitt</p>
+          </div>
+          <UIcon name="i-heroicons-arrow-right" class="fnav-arrow" />
         </div>
       </div>
     </div>
@@ -132,24 +162,24 @@
       <div class="section-header">
         <div class="header-left">
           <h2>
-            <UIcon name="i-lucide-newspaper" class="section-icon" />
+            <UIcon name="i-heroicons-newspaper" class="section-icon" />
             Top Nachrichten
           </h2>
           <span class="news-time">Letzte 24 Stunden</span>
         </div>
         <NuxtLink to="/nachrichten" class="view-all-btn">
           Alle anzeigen
-          <UIcon name="i-lucide-arrow-right" />
+          <UIcon name="i-heroicons-arrow-right" />
         </NuxtLink>
       </div>
 
       <div v-if="newsError" class="news-error">
-        <UIcon name="i-lucide-alert-circle" />
+        <UIcon name="i-heroicons-alert-circle" />
         <p>{{ newsError }}</p>
       </div>
 
       <div v-else-if="isLoadingNews" class="news-loading">
-        <UIcon name="i-lucide-loader-2" class="loading-spinner" />
+        <UIcon name="i-heroicons-loader-2" class="loading-spinner" />
         <span>Nachrichten werden geladen...</span>
       </div>
 
@@ -166,7 +196,7 @@
           </div>
           <div class="news-content">
             <div class="news-source">
-              <UIcon name="i-lucide-radio" />
+              <UIcon name="i-heroicons-radio" />
               <span>{{ article.source.name }}</span>
               <span class="news-dot">•</span>
               <span>{{ formatNewsTime(article.publishedAt) }}</span>
@@ -176,7 +206,7 @@
             <div class="news-footer">
               <span class="read-more">
                 Weiterlesen
-                <UIcon name="i-lucide-arrow-right" />
+                <UIcon name="i-heroicons-arrow-right" />
               </span>
             </div>
           </div>
@@ -184,71 +214,39 @@
       </div>
     </div>
 
-    <!-- Timers Section -->
-    <div class="timers-section">
-      <div class="timers-grid">
-        <!-- Countdown Timer -->
-        <div class="timer-card">
-          <div class="timer-header">
-            <UIcon name="i-lucide-timer" class="timer-icon" />
-            <h3>Countdown</h3>
+    <!-- Daily Inspiration -->
+    <div class="inspiration-section">
+      <div class="inspiration-grid">
+        <!-- Daily Prayer -->
+        <div class="inspiration-card prayer-card">
+          <div class="insp-header">
+            <div class="insp-icon">🙏</div>
+            <button class="insp-reset-btn" @click="refreshDailyPrayer" title="Neues Gebet"><UIcon name="i-heroicons-arrow-path" /></button>
           </div>
-          <div class="timer-display">{{ countdownDisplay }}</div>
-          <div class="timer-input" v-if="!countdownRunning">
-            <input 
-              v-model.number="countdownMinutes" 
-              type="number" 
-              min="0" 
-              placeholder="Min"
-              class="time-input"
-            />
-            <span>:</span>
-            <input 
-              v-model.number="countdownSeconds" 
-              type="number" 
-              min="0" 
-              max="59"
-              placeholder="Sek"
-              class="time-input"
-            />
-          </div>
-          <div class="timer-controls">
-            <button @click="startCountdown" v-if="!countdownRunning" class="timer-btn start-btn">
-              <UIcon name="i-lucide-play" />
-              Start
-            </button>
-            <button @click="pauseCountdown" v-if="countdownRunning" class="timer-btn pause-btn">
-              <UIcon name="i-lucide-pause" />
-              Pause
-            </button>
-            <button @click="resetCountdown" class="timer-btn reset-btn">
-              <UIcon name="i-lucide-rotate-ccw" />
-              Reset
-            </button>
-          </div>
+          <h3>Tagesgebet</h3>
+          <p class="insp-text" v-if="dailyPrayer">{{ dailyPrayer.text }}</p>
+          <p class="insp-source" v-if="dailyPrayer">— {{ dailyPrayer.reference }}</p>
+          <div v-if="!dailyPrayer" class="insp-loading">Laden...</div>
         </div>
-
-        <!-- Stopwatch -->
-        <div class="timer-card">
-          <div class="timer-header">
-            <UIcon name="i-lucide-clock" class="timer-icon" />
-            <h3>Stopwatch</h3>
+        <!-- Daily Fact -->
+        <div class="inspiration-card fact-card">
+          <div class="insp-header">
+            <div class="insp-icon">💡</div>
+            <button class="insp-reset-btn" @click="refreshDailyFact" title="Neuer Fakt"><UIcon name="i-heroicons-arrow-path" /></button>
           </div>
-          <div class="timer-display">{{ stopwatchDisplay }}</div>
-          <div class="timer-controls">
-            <button @click="startStopwatch" v-if="!stopwatchRunning" class="timer-btn start-btn">
-              <UIcon name="i-lucide-play" />
-              Start
-            </button>
-            <button @click="pauseStopwatch" v-if="stopwatchRunning" class="timer-btn pause-btn">
-              <UIcon name="i-lucide-pause" />
-              Pause
-            </button>
-            <button @click="resetStopwatch" class="timer-btn reset-btn">
-              <UIcon name="i-lucide-rotate-ccw" />
-              Reset
-            </button>
+          <h3>Fakt des Tages</h3>
+          <p class="insp-text" v-if="dailyFact">{{ dailyFact }}</p>
+          <div v-if="!dailyFact" class="insp-loading">Laden...</div>
+        </div>
+        <!-- Joke of the Day -->
+        <div class="inspiration-card joke-card">
+          <div class="insp-header">
+            <div class="insp-icon">😂</div>
+            <button class="insp-reset-btn" @click="refreshDailyJoke" title="Neuer Witz"><UIcon name="i-heroicons-arrow-path" /></button>
           </div>
+          <h3>Witz des Tages</h3>
+          <p class="insp-text" v-if="dailyJoke">{{ dailyJoke }}</p>
+          <div v-if="!dailyJoke" class="insp-loading">Laden...</div>
         </div>
       </div>
     </div>
@@ -257,21 +255,21 @@
     <div class="finance-section">
       <div class="section-header">
         <h2>
-          <UIcon name="i-lucide-trending-up" class="section-icon" />
+          <UIcon name="i-heroicons-trending-up" class="section-icon" />
           Finanzen & Crypto
         </h2>
         <button @click="refreshCrypto" class="refresh-btn">
-          <UIcon name="i-lucide-refresh-cw" :class="{ 'spinning': isLoadingCrypto }" />
+          <UIcon name="i-heroicons-refresh-cw" :class="{ 'spinning': isLoadingCrypto }" />
         </button>
       </div>
 
       <div v-if="cryptoError" class="crypto-error">
-        <UIcon name="i-lucide-alert-circle" />
+        <UIcon name="i-heroicons-alert-circle" />
         <p>{{ cryptoError }}</p>
       </div>
 
       <div v-else-if="isLoadingCrypto" class="crypto-loading">
-        <UIcon name="i-lucide-loader-2" class="loading-spinner" />
+        <UIcon name="i-heroicons-loader-2" class="loading-spinner" />
         <span>Lade Kursdaten...</span>
       </div>
 
@@ -291,7 +289,7 @@
           </div>
           <div class="crypto-price">{{ formatCurrency(coin.current_price) }}</div>
           <div class="crypto-change" :class="{ 'positive': coin.price_change_percentage_24h > 0, 'negative': coin.price_change_percentage_24h < 0 }">
-            <UIcon :name="coin.price_change_percentage_24h > 0 ? 'i-lucide-trending-up' : 'i-lucide-trending-down'" />
+            <UIcon :name="coin.price_change_percentage_24h > 0 ? 'i-heroicons-trending-up' : 'i-heroicons-trending-down'" />
             <span>{{ coin.price_change_percentage_24h.toFixed(2) }}%</span>
           </div>
           <div class="crypto-market-cap">
@@ -306,18 +304,18 @@
     <div class="journal-section">
       <div class="section-header">
         <h2>
-          <UIcon name="i-lucide-book-open" class="section-icon" />
+          <UIcon name="i-heroicons-book-open" class="section-icon" />
           Tägliches Tagebuch
         </h2>
         <button @click="saveTodayEntry" class="save-journal-btn">
-          <UIcon name="i-lucide-save" />
+          <UIcon name="i-heroicons-arrow-down-tray" />
           Speichern
         </button>
       </div>
 
       <div class="journal-card">
         <div class="journal-date">
-          <UIcon name="i-lucide-calendar" />
+          <UIcon name="i-heroicons-calendar" />
           <span>{{ formatJournalDate(new Date()) }}</span>
         </div>
         <textarea 
@@ -335,7 +333,7 @@
       <div class="journal-history">
         <h4>Letzte Einträge</h4>
         <div v-if="journalEntries.length === 0" class="journal-empty">
-          <UIcon name="i-lucide-file-text" />
+          <UIcon name="i-heroicons-file-text" />
           <p>Noch keine Einträge vorhanden</p>
         </div>
         <div v-else class="journal-entries">
@@ -357,7 +355,7 @@
     <div class="meditation-section">
       <div class="section-header">
         <h2>
-          <UIcon name="i-lucide-flower" class="section-icon" />
+          <UIcon name="i-heroicons-flower" class="section-icon" />
           5 Minuten Meditation
         </h2>
       </div>
@@ -385,146 +383,40 @@
 
         <div class="meditation-controls">
           <button @click="startMeditation" v-if="!meditationRunning" class="meditation-btn start">
-            <UIcon name="i-lucide-play" />
+            <UIcon name="i-heroicons-play" />
             {{ meditationTime === 300 ? 'Start' : 'Fortsetzen' }}
           </button>
           <button @click="pauseMeditation" v-if="meditationRunning" class="meditation-btn pause">
-            <UIcon name="i-lucide-pause" />
+            <UIcon name="i-heroicons-pause" />
             Pause
           </button>
           <button @click="resetMeditation" class="meditation-btn reset">
-            <UIcon name="i-lucide-rotate-ccw" />
+            <UIcon name="i-heroicons-rotate-ccw" />
             Reset
           </button>
         </div>
 
         <div class="meditation-stats">
           <div class="stat-item">
-            <UIcon name="i-lucide-check-circle-2" />
+            <UIcon name="i-heroicons-check-circle" />
             <span>{{ meditationSessions }} Sessions heute</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Daily Book Reader -->
-    <div class="book-section">
-      <div class="section-header">
-        <h2>
-          <UIcon name="i-lucide-book" class="section-icon" />
-          Tägliches Lesen - 5 Seiten
-        </h2>
-      </div>
-
-      <div class="book-card">
-        <div class="book-info">
-          <div class="book-cover">
-            <UIcon name="i-lucide-book-open-text" />
-          </div>
-          <div class="book-details">
-            <h3>{{ currentBook.title }}</h3>
-            <p class="book-author">von {{ currentBook.author }}</p>
-            <div class="book-progress-bar">
-              <div class="book-progress" :style="{ width: bookProgressPercent + '%' }"></div>
-            </div>
-            <p class="book-progress-text">{{ currentBook.currentPage }} / {{ currentBook.totalPages }} Seiten ({{ bookProgressPercent }}%)</p>
-          </div>
-        </div>
-
-        <div class="book-daily-goal">
-          <div class="goal-header">
-            <h4>Heutiges Ziel: 5 Seiten</h4>
-            <span class="goal-status" :class="{ 'completed': todayPagesRead >= 5 }">
-              {{ todayPagesRead }}/5 gelesen
-            </span>
-          </div>
-          <div class="goal-progress-bar">
-            <div class="goal-progress" :style="{ width: (todayPagesRead / 5 * 100) + '%' }"></div>
-          </div>
-        </div>
-
-        <div class="book-actions">
-          <button @click="markPagesRead(1)" class="page-btn">
-            <UIcon name="i-lucide-plus" />
-            1 Seite
-          </button>
-          <button @click="markPagesRead(5)" class="page-btn primary">
-            <UIcon name="i-lucide-book-open" />
-            5 Seiten
-          </button>
-          <button @click="showBookSelector = true" class="page-btn">
-            <UIcon name="i-lucide-library" />
-            Buch wechseln
-          </button>
-        </div>
-
-        <div class="book-stats">
-          <div class="stat-box">
-            <div class="stat-value">{{ readingStreak }}</div>
-            <div class="stat-label">Tage Streak</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">{{ totalPagesRead }}</div>
-            <div class="stat-label">Seiten gesamt</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value">{{ booksCompleted }}</div>
-            <div class="stat-label">Bücher fertig</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Book Selector Modal -->
-    <div v-if="showBookSelector" class="modal-overlay" @click="showBookSelector = false">
-      <div class="modal-content" @click.stop>
-        <div class="modal-header">
-          <div class="modal-title">
-            <UIcon name="i-lucide-library" class="modal-icon" />
-            <h3>Buch auswählen oder hinzufügen</h3>
-          </div>
-          <button class="modal-close" @click="showBookSelector = false">
-            <UIcon name="i-lucide-x" />
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label>Titel</label>
-            <input v-model="newBook.title" type="text" placeholder="Buchtitel" class="habit-input" />
-          </div>
-          <div class="form-group">
-            <label>Autor</label>
-            <input v-model="newBook.author" type="text" placeholder="Autor" class="habit-input" />
-          </div>
-          <div class="form-group">
-            <label>Gesamtseiten</label>
-            <input v-model.number="newBook.totalPages" type="number" placeholder="z.B. 300" class="habit-input" />
-          </div>
-          <div class="form-group">
-            <label>Aktuelle Seite</label>
-            <input v-model.number="newBook.currentPage" type="number" placeholder="z.B. 1" class="habit-input" />
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn-secondary" @click="showBookSelector = false">Abbrechen</button>
-          <button class="btn-primary" @click="selectBook">
-            <UIcon name="i-lucide-check" />
-            Auswählen
-          </button>
-        </div>
-      </div>
-    </div>
+    <!-- (Removed old book reader widget) -->
 
     <!-- View Journal Entry Modal -->
     <div v-if="viewingEntry" class="modal-overlay" @click="viewingEntry = null">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <div class="modal-title">
-            <UIcon name="i-lucide-book-open" class="modal-icon" />
+            <UIcon name="i-heroicons-book-open" class="modal-icon" />
             <h3>{{ formatJournalDate(new Date(viewingEntry.date)) }}</h3>
           </div>
           <button class="modal-close" @click="viewingEntry = null">
-            <UIcon name="i-lucide-x" />
+            <UIcon name="i-heroicons-x-mark" />
           </button>
         </div>
         <div class="modal-body">
@@ -544,17 +436,34 @@
     <!-- Quote of the Day -->
     <div class="quote-section">
       <div class="quote-card">
-        <UIcon name="i-lucide-quote" class="quote-icon" />
+        <button class="insp-reset-btn quote-reset-btn" @click="refreshDailyQuote" title="Neues Zitat"><UIcon name="i-heroicons-arrow-path" /></button>
+        <UIcon name="i-heroicons-quote" class="quote-icon" />
         <p class="quote-text">"{{ dailyQuote.text }}"</p>
         <p class="quote-author">— {{ dailyQuote.author }}</p>
       </div>
     </div>
 
-    <!-- Quick Tools Grid (Calculator, Birthday, Steps, Currency) -->
-    <div class="tools-section">
+    <!-- Feature Navigation Grid -->
+    <div class="feature-hub-section">
+      <div class="section-header"><h2><UIcon name="i-heroicons-squares-2x2" class="section-icon" /> Alle Features</h2></div>
+      <div class="feature-hub-grid">
+        <div class="fhub-card" @click="navigateTo('/tagesplan')" style="--accent:#4facfe"><div class="fhub-icon">📅</div><h4>Tagesplan</h4><p>Zeitblöcke planen</p></div>
+        <div class="fhub-card" @click="navigateTo('/todo')" style="--accent:#10b981"><div class="fhub-icon">✅</div><h4>Todo Liste</h4><p>2-Wochen Planer</p></div>
+        <div class="fhub-card" @click="navigateTo('/fitness')" style="--accent:#ff6b35"><div class="fhub-icon">🏋️</div><h4>Fitness</h4><p>Workouts & Gewicht</p></div>
+        <div class="fhub-card" @click="navigateTo('/finanzen')" style="--accent:#ffd93d"><div class="fhub-icon">💰</div><h4>Finanzen</h4><p>Budget & Ausgaben</p></div>
+        <div class="fhub-card" @click="navigateTo('/glowup')" style="--accent:#ff9ff3"><div class="fhub-icon">✨</div><h4>Glowup</h4><p>Selfies & Tracking</p></div>
+        <div class="fhub-card" @click="navigateTo('/buecher')" style="--accent:#e056fd"><div class="fhub-icon">📖</div><h4>Bücher</h4><p>Lesen & Tracker</p></div>
+        <div class="fhub-card" @click="navigateTo('/routinen')" style="--accent:#a29bfe"><div class="fhub-icon">🌅</div><h4>Routinen</h4><p>Morgen · Mittag · Abend</p></div>
+        <div class="fhub-card" @click="navigateTo('/gewohnheiten')" style="--accent:#54a0ff"><div class="fhub-icon">🎯</div><h4>Gewohnheiten</h4><p>Habits & Streaks</p></div>
+        <div class="fhub-card" @click="navigateTo('/noten')" style="--accent:#ff6b6b"><div class="fhub-icon">📐</div><h4>Noten</h4><p>Fächer & Schnitt</p></div>
+      </div>
+    </div>
+
+    <!-- (Removed Quick Tools - replaced with Feature Hub above) -->
+    <div style="display:none">
       <div class="section-header">
         <h2>
-          <UIcon name="i-lucide-wrench" class="section-icon" />
+          <UIcon name="i-heroicons-wrench" class="section-icon" />
           Quick Tools
         </h2>
       </div>
@@ -563,7 +472,7 @@
         <!-- Calculator -->
         <div class="tool-card calculator-card">
           <div class="tool-header">
-            <UIcon name="i-lucide-calculator" />
+            <UIcon name="i-heroicons-calculator" />
             <h4>Rechner</h4>
           </div>
           <div class="calculator-display">{{ calcDisplay }}</div>
@@ -590,11 +499,11 @@
         <!-- Birthday Reminders -->
         <div class="tool-card birthday-card">
           <div class="tool-header">
-            <UIcon name="i-lucide-cake" />
+            <UIcon name="i-heroicons-cake" />
             <h4>Geburtstage</h4>
           </div>
           <div v-if="upcomingBirthdays.length === 0" class="tool-empty">
-            <UIcon name="i-lucide-calendar" />
+            <UIcon name="i-heroicons-calendar" />
             <p>Keine Geburtstage in den nächsten 30 Tagen</p>
           </div>
           <div v-else class="birthday-list">
@@ -610,7 +519,7 @@
             </div>
           </div>
           <button @click="showAddBirthday = true" class="tool-action-btn">
-            <UIcon name="i-lucide-plus" />
+            <UIcon name="i-heroicons-plus" />
             Geburtstag hinzufügen
           </button>
         </div>
@@ -618,7 +527,7 @@
         <!-- Step Counter -->
         <div class="tool-card steps-card">
           <div class="tool-header">
-            <UIcon name="i-lucide-footprints" />
+            <UIcon name="i-heroicons-footprints" />
             <h4>Schritte Heute</h4>
           </div>
           <div class="steps-display">
@@ -653,7 +562,7 @@
         <!-- Currency Converter -->
         <div class="tool-card currency-card">
           <div class="tool-header">
-            <UIcon name="i-lucide-coins" />
+            <UIcon name="i-heroicons-coins" />
             <h4>Währungsrechner</h4>
           </div>
           <div class="currency-converter">
@@ -668,7 +577,7 @@
               </select>
             </div>
             <button @click="swapCurrencies" class="swap-btn">
-              <UIcon name="i-lucide-arrow-left-right" />
+              <UIcon name="i-heroicons-arrow-left-right" />
             </button>
             <div class="currency-input-group">
               <input :value="convertedAmount" readonly class="currency-input result" />
@@ -693,11 +602,11 @@
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <div class="modal-title">
-            <UIcon name="i-lucide-cake" class="modal-icon" />
+            <UIcon name="i-heroicons-cake" class="modal-icon" />
             <h3>Geburtstag hinzufügen</h3>
           </div>
           <button class="modal-close" @click="showAddBirthday = false">
-            <UIcon name="i-lucide-x" />
+            <UIcon name="i-heroicons-x-mark" />
           </button>
         </div>
         <div class="modal-body">
@@ -713,7 +622,7 @@
         <div class="modal-footer">
           <button class="btn-secondary" @click="showAddBirthday = false">Abbrechen</button>
           <button class="btn-primary" @click="addBirthday">
-            <UIcon name="i-lucide-plus" />
+            <UIcon name="i-heroicons-plus" />
             Hinzufügen
           </button>
         </div>
@@ -724,18 +633,18 @@
     <div class="detailed-weather-section">
       <div class="section-header">
         <h2>
-          <UIcon name="i-lucide-cloud-sun" class="section-icon" />
+          <UIcon name="i-heroicons-cloud-sun" class="section-icon" />
           Detailliertes Wetter & Luftqualität
         </h2>
       </div>
 
       <div v-if="weatherError" class="weather-detail-error">
-        <UIcon name="i-lucide-alert-circle" />
+        <UIcon name="i-heroicons-alert-circle" />
         <p>{{ weatherError }}</p>
       </div>
 
       <div v-else-if="isLoading" class="weather-detail-loading">
-        <UIcon name="i-lucide-loader-2" class="loading-spinner" />
+        <UIcon name="i-heroicons-loader-2" class="loading-spinner" />
         <span>Wetterdaten werden geladen...</span>
       </div>
 
@@ -753,14 +662,14 @@
 
         <div class="weather-info-card">
           <div class="weather-info-item">
-            <UIcon name="i-lucide-droplets" />
+            <UIcon name="i-heroicons-droplets" />
             <div>
               <span class="info-label">Luftfeuchtigkeit</span>
               <span class="info-value">{{ weatherData.current.humidity }}%</span>
             </div>
           </div>
           <div class="weather-info-item">
-            <UIcon name="i-lucide-wind" />
+            <UIcon name="i-heroicons-wind" />
             <div>
               <span class="info-label">Wind</span>
               <span class="info-value">{{ weatherData.current.wind_kph }} km/h</span>
@@ -770,14 +679,14 @@
 
         <div class="weather-info-card">
           <div class="weather-info-item">
-            <UIcon name="i-lucide-gauge" />
+            <UIcon name="i-heroicons-gauge" />
             <div>
               <span class="info-label">Luftdruck</span>
               <span class="info-value">{{ weatherData.current.pressure_mb }} mb</span>
             </div>
           </div>
           <div class="weather-info-item">
-            <UIcon name="i-lucide-eye" />
+            <UIcon name="i-heroicons-eye" />
             <div>
               <span class="info-label">Sichtweite</span>
               <span class="info-value">{{ weatherData.current.vis_km }} km</span>
@@ -787,7 +696,7 @@
 
         <div class="air-quality-card" v-if="weatherData.current.air_quality">
           <div class="aqi-header">
-            <UIcon name="i-lucide-wind" />
+            <UIcon name="i-heroicons-wind" />
             <h4>Luftqualität</h4>
           </div>
           <div class="aqi-value" :class="getAqiClass(weatherData.current.air_quality['us-epa-index'])">
@@ -807,96 +716,18 @@
       </div>
     </div>
 
-    <!-- Pomodoro Timer Section -->
-    <div class="pomodoro-section">
-      <div class="section-header">
-        <h2>
-          <UIcon name="i-lucide-timer" class="section-icon" />
-          Pomodoro Timer
-        </h2>
-      </div>
-
-      <div class="pomodoro-card">
-        <div class="pomodoro-mode">
-          <button 
-            @click="setPomodoroMode('work')" 
-            :class="{ active: pomodoroMode === 'work' }"
-            class="mode-btn work-mode"
-          >
-            <UIcon name="i-lucide-briefcase" />
-            Arbeit
-          </button>
-          <button 
-            @click="setPomodoroMode('shortBreak')" 
-            :class="{ active: pomodoroMode === 'shortBreak' }"
-            class="mode-btn break-mode"
-          >
-            <UIcon name="i-lucide-coffee" />
-            Kurze Pause
-          </button>
-          <button 
-            @click="setPomodoroMode('longBreak')" 
-            :class="{ active: pomodoroMode === 'longBreak' }"
-            class="mode-btn break-mode"
-          >
-            <UIcon name="i-lucide-moon" />
-            Lange Pause
-          </button>
-        </div>
-
-        <div class="pomodoro-display">
-          <svg class="pomodoro-progress" viewBox="0 0 200 200">
-            <circle 
-              cx="100" 
-              cy="100" 
-              r="90" 
-              class="progress-bg"
-            />
-            <circle 
-              cx="100" 
-              cy="100" 
-              r="90" 
-              class="progress-bar"
-              :style="{ strokeDashoffset: pomodoroProgress }"
-            />
-          </svg>
-          <div class="pomodoro-time">{{ pomodoroDisplay }}</div>
-        </div>
-
-        <div class="pomodoro-controls">
-          <button @click="startPomodoro" v-if="!pomodoroRunning" class="pomo-btn start-btn">
-            <UIcon name="i-lucide-play" />
-            Start
-          </button>
-          <button @click="pausePomodoro" v-if="pomodoroRunning" class="pomo-btn pause-btn">
-            <UIcon name="i-lucide-pause" />
-            Pause
-          </button>
-          <button @click="resetPomodoro" class="pomo-btn reset-btn">
-            <UIcon name="i-lucide-rotate-ccw" />
-            Reset
-          </button>
-        </div>
-
-        <div class="pomodoro-stats">
-          <div class="stat-item">
-            <UIcon name="i-lucide-check-circle-2" />
-            <span>Sessions: {{ pomodoroSessions }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- (Pomodoro removed) -->
 
     <!-- Tasks Setup Modal -->
     <div v-if="showTasksSetup" class="modal-overlay" @click="showTasksSetup = false">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <div class="modal-title">
-            <UIcon name="i-lucide-settings" class="modal-icon" />
+            <UIcon name="i-heroicons-settings" class="modal-icon" />
             <h3>Google Tasks API aktivieren</h3>
           </div>
           <button class="modal-close" @click="showTasksSetup = false">
-            <UIcon name="i-lucide-x" />
+            <UIcon name="i-heroicons-x-mark" />
           </button>
         </div>
         
@@ -934,7 +765,7 @@
           </div>
 
           <div class="setup-note">
-            <UIcon name="i-lucide-info" />
+            <UIcon name="i-heroicons-info" />
             <p><strong>Hinweis:</strong> Du benötigst Admin-Zugriff auf dein Google Cloud Projekt</p>
           </div>
         </div>
@@ -948,7 +779,7 @@
             target="_blank" 
             class="btn-primary"
           >
-            <UIcon name="i-lucide-external-link" />
+            <UIcon name="i-heroicons-external-link" />
             Zur Console
           </a>
         </div>
@@ -963,17 +794,17 @@ const config = useRuntimeConfig();
 const greetingsIcon = computed(() => {
   const hour = new Date().getHours();
   if (hour >= 5 && hour < 10) {
-    return { icon: 'i-lucide-hand-wave', message: 'Guten Morgen' };
+    return { icon: 'i-heroicons-hand-wave', message: 'Guten Morgen' };
   } else if (hour >= 10 && hour < 12) {
-    return { icon: 'i-lucide-sun', message: 'Guten Vormittag' };
+    return { icon: 'i-heroicons-sun', message: 'Guten Vormittag' };
   } else if (hour >= 12 && hour < 16) {
-    return { icon: 'i-lucide-sun', message: 'Guten Mittag' };
+    return { icon: 'i-heroicons-sun', message: 'Guten Mittag' };
   } else if (hour >= 16 && hour < 18) {
-    return { icon: 'i-lucide-sun', message: 'Guten Nachmittag' };
+    return { icon: 'i-heroicons-sun', message: 'Guten Nachmittag' };
   } else if (hour >= 18 && hour < 22) {
-    return { icon: 'i-lucide-moon', message: 'Guten Abend' };
+    return { icon: 'i-heroicons-moon', message: 'Guten Abend' };
   } else {
-    return { icon: 'i-lucide-bed', message: 'Gute Nacht' };
+    return { icon: 'i-heroicons-bed', message: 'Gute Nacht' };
   }
 });
 const greetingMessage = computed(() => greetingsIcon.value.message);
@@ -1009,30 +840,30 @@ const weatherDescription = computed(() => {
 });
 
 const weatherIcon = computed(() => {
-  if (!weatherData.value) return 'i-lucide-thermometer';
+  if (!weatherData.value) return 'i-heroicons-thermometer';
   const code = weatherData.value.current.condition.code;
   const isDay = weatherData.value.current.is_day === 1;
   
   // Thunderstorm
-  if ([1087, 1273, 1276, 1279, 1282].includes(code)) return 'i-lucide-cloud-lightning';
+  if ([1087, 1273, 1276, 1279, 1282].includes(code)) return 'i-heroicons-cloud-lightning';
   // Rain
-  if ([1063, 1150, 1153, 1180, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246].includes(code)) return 'i-lucide-cloud-rain';
+  if ([1063, 1150, 1153, 1180, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246].includes(code)) return 'i-heroicons-cloud-rain';
   // Drizzle
-  if ([1072, 1168, 1171].includes(code)) return 'i-lucide-cloud-drizzle';
+  if ([1072, 1168, 1171].includes(code)) return 'i-heroicons-cloud-drizzle';
   // Snow
-  if ([1066, 1114, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258].includes(code)) return 'i-lucide-snowflake';
+  if ([1066, 1114, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258].includes(code)) return 'i-heroicons-snowflake';
   // Sleet
-  if ([1069, 1204, 1207, 1237, 1249, 1252, 1261, 1264].includes(code)) return 'i-lucide-cloud-snow';
+  if ([1069, 1204, 1207, 1237, 1249, 1252, 1261, 1264].includes(code)) return 'i-heroicons-cloud-snow';
   // Fog/Mist
-  if ([1030, 1135, 1147].includes(code)) return 'i-lucide-cloud-fog';
+  if ([1030, 1135, 1147].includes(code)) return 'i-heroicons-cloud-fog';
   // Cloudy
-  if ([1006, 1009].includes(code)) return 'i-lucide-cloud';
+  if ([1006, 1009].includes(code)) return 'i-heroicons-cloud';
   // Partly cloudy
-  if (code === 1003) return isDay ? 'i-lucide-cloud-sun' : 'i-lucide-cloud-moon';
+  if (code === 1003) return isDay ? 'i-heroicons-cloud-sun' : 'i-heroicons-cloud-moon';
   // Clear
-  if (code === 1000) return isDay ? 'i-lucide-sun' : 'i-lucide-moon';
+  if (code === 1000) return isDay ? 'i-heroicons-sun' : 'i-heroicons-moon';
   
-  return 'i-lucide-thermometer';
+  return 'i-heroicons-thermometer';
 });
 
 // Fetch weather data
@@ -1467,11 +1298,11 @@ const quotes = [
   { text: 'Glaube an dich selbst und alles ist möglich.', author: 'Unknown' }
 ];
 
-const setDailyQuote = () => {
+const setDailyQuote = (force = false) => {
   const today = new Date().toDateString();
   const savedDate = localStorage.getItem('quote_date');
   
-  if (savedDate !== today) {
+  if (force || savedDate !== today) {
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     dailyQuote.value = randomQuote;
     localStorage.setItem('quote_date', today);
@@ -1483,6 +1314,90 @@ const setDailyQuote = () => {
     }
   }
 };
+
+const refreshDailyQuote = () => setDailyQuote(true);
+
+// ====================
+// DAILY PRAYER & FACT
+// ====================
+const dailyPrayer = ref(null);
+const dailyFact = ref('');
+
+const prayerVerses = [
+  { text: 'Denn ich weiß wohl, was ich für Gedanken über euch habe, spricht der HERR: Gedanken des Friedens und nicht des Leides, dass ich euch gebe Zukunft und Hoffnung.', reference: 'Jeremia 29:11' },
+  { text: 'Fürchte dich nicht, denn ich bin mit dir; sei nicht ängstlich, denn ich bin dein Gott. Ich stärke dich, ich helfe dir auch.', reference: 'Jesaja 41:10' },
+  { text: 'Alle Dinge sind möglich dem, der da glaubt.', reference: 'Markus 9:23' },
+  { text: 'Der HERR ist mein Hirte, mir wird nichts mangeln.', reference: 'Psalm 23:1' },
+  { text: 'Befiehl dem HERRN deine Wege und hoffe auf ihn, er wird es wohl machen.', reference: 'Psalm 37:5' },
+  { text: 'Seid stark und mutig! Fürchtet euch nicht und erschreckt nicht vor ihnen! Denn der HERR, dein Gott, er ist es, der mit dir geht.', reference: '5. Mose 31:6' },
+  { text: 'Ich vermag alles durch den, der mich mächtig macht.', reference: 'Philipper 4:13' },
+  { text: 'Kommt her zu mir, alle, die ihr mühselig und beladen seid; ich will euch erquicken.', reference: 'Matthäus 11:28' },
+  { text: 'Denn Gott hat uns nicht gegeben den Geist der Furcht, sondern der Kraft und der Liebe und der Besonnenheit.', reference: '2. Timotheus 1:7' },
+  { text: 'Der HERR segne dich und behüte dich. Der HERR lasse sein Angesicht leuchten über dir und sei dir gnädig.', reference: '4. Mose 6:24-25' },
+  { text: 'Wirf dein Anliegen auf den HERRN; der wird dich versorgen.', reference: 'Psalm 55:23' },
+  { text: 'Er gibt dem Müden Kraft und Stärke genug dem Unvermögenden.', reference: 'Jesaja 40:29' },
+  { text: 'In der Welt habt ihr Angst; aber seid getrost, ich habe die Welt überwunden.', reference: 'Johannes 16:33' },
+  { text: 'Denn wo zwei oder drei versammelt sind in meinem Namen, da bin ich mitten unter ihnen.', reference: 'Matthäus 18:20' },
+];
+
+const loadDailyPrayer = (force = false) => {
+  const today = new Date().toDateString();
+  const savedDate = localStorage.getItem('prayer_date');
+  if (!force && savedDate === today) {
+    const saved = localStorage.getItem('daily_prayer');
+    if (saved) {
+      dailyPrayer.value = JSON.parse(saved);
+      return;
+    }
+  }
+  const prayer = prayerVerses[Math.floor(Math.random() * prayerVerses.length)];
+  dailyPrayer.value = prayer;
+  localStorage.setItem('prayer_date', today);
+  localStorage.setItem('daily_prayer', JSON.stringify(prayer));
+};
+
+const refreshDailyPrayer = () => loadDailyPrayer(true);
+
+const loadDailyFact = async (force = false) => {
+  const today = new Date().toDateString();
+  const savedDate = localStorage.getItem('fact_date');
+  if (!force && savedDate === today) {
+    dailyFact.value = localStorage.getItem('daily_fact') || '';
+    if (dailyFact.value) return;
+  }
+  try {
+    const r = await $fetch('https://uselessfacts.jsph.pl/api/v2/facts/random?language=de');
+    dailyFact.value = r.text;
+    localStorage.setItem('fact_date', today);
+    localStorage.setItem('daily_fact', r.text);
+  } catch (e) {
+    console.error('Fact fetch error:', e);
+    dailyFact.value = 'Wusstest du? Honig wird nie schlecht. Archäologen haben 3000 Jahre alten Honig in ägyptischen Gräbern gefunden, der immer noch essbar war.';
+  }
+};
+
+const refreshDailyFact = () => loadDailyFact(true);
+
+const dailyJoke = ref('');
+
+const loadDailyJoke = async (force = false) => {
+  const today = new Date().toDateString();
+  const savedDate = localStorage.getItem('joke_date');
+  if (!force && savedDate === today) {
+    dailyJoke.value = localStorage.getItem('daily_joke') || '';
+    if (dailyJoke.value) return;
+  }
+  try {
+    const r = await $fetch('https://v2.jokeapi.dev/joke/Any?lang=de&type=single');
+    dailyJoke.value = r.joke || 'Warum können Geister so schlecht lügen? Weil man durch sie hindurchsehen kann!';
+    localStorage.setItem('joke_date', today);
+    localStorage.setItem('daily_joke', dailyJoke.value);
+  } catch(e) {
+    dailyJoke.value = 'Warum können Geister so schlecht lügen? Weil man durch sie hindurchsehen kann!';
+  }
+};
+
+const refreshDailyJoke = () => loadDailyJoke(true);
 
 // ====================
 // CALCULATOR
@@ -1952,10 +1867,13 @@ onMounted(async () => {
   // Initialize local storage features
   loadJournalEntries();
   loadMeditationSessions();
-  loadBookData();
+  // loadBookData();
   loadBirthdays();
   loadSteps();
   setDailyQuote();
+  loadDailyPrayer();
+  loadDailyFact();
+  loadDailyJoke();
   
   // Restore authentication tokens
   await restoreToken();
@@ -2025,6 +1943,81 @@ onUnmounted(() => {
   gap: 1.5rem;
   max-width: 1400px;
   margin: 0 auto;
+}
+
+/* Feature Navigation Cards */
+.feature-nav-section {
+  max-width: 1400px;
+  margin: 2rem auto;
+}
+
+.feature-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.feature-nav-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.feature-nav-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(79, 172, 254, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.routine-nav:hover { border-color: rgba(255, 183, 77, 0.4); box-shadow: 0 10px 30px rgba(255, 183, 77, 0.15); }
+.habits-nav:hover { border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15); }
+.grades-nav:hover { border-color: rgba(255, 217, 61, 0.4); box-shadow: 0 10px 30px rgba(255, 217, 61, 0.15); }
+
+.fnav-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.fnav-content {
+  flex: 1;
+}
+
+.fnav-content h3 {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.15rem;
+}
+
+.fnav-content p {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.fnav-arrow {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: rgba(255, 255, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.feature-nav-card:hover .fnav-arrow {
+  color: rgba(255, 255, 255, 0.6);
+  transform: translateX(3px);
+}
+
+@media (max-width: 768px) {
+  .feature-nav-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Stat Card Base */
@@ -3918,6 +3911,12 @@ onUnmounted(() => {
   position: relative;
 }
 
+.quote-reset-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+}
+
 .quote-icon {
   width: 48px;
   height: 48px;
@@ -4852,5 +4851,36 @@ onUnmounted(() => {
   .air-quality-card {
     grid-column: span 2;
   }
+}
+
+/* Daily Inspiration */
+.inspiration-section { margin-bottom: 2rem; }
+.inspiration-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.inspiration-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.5rem; position: relative; transition: transform 0.2s; }
+.inspiration-card:hover { transform: translateY(-3px); }
+.prayer-card { border-color: rgba(162,155,254,0.2); background: linear-gradient(135deg, rgba(162,155,254,0.05), rgba(108,92,231,0.05)); }
+.fact-card { border-color: rgba(255,217,61,0.2); background: linear-gradient(135deg, rgba(255,217,61,0.05), rgba(249,202,36,0.05)); }
+.joke-card { border-color: rgba(79,172,254,0.2); background: linear-gradient(135deg, rgba(79,172,254,0.05), rgba(0,242,254,0.05)); }
+.insp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+.insp-icon { font-size: 2rem; }
+.insp-reset-btn { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.3s ease; }
+.insp-reset-btn:hover { background: rgba(255,255,255,0.15); color: white; transform: rotate(180deg); }
+.inspiration-card h3 { font-size: 1rem; margin: 0 0 0.75rem; color: rgba(255,255,255,0.9); }
+.insp-text { font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.75); margin: 0; font-style: normal; }
+.insp-source { color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 0.5rem; font-style: italic; }
+.insp-loading { color: rgba(255,255,255,0.3); font-size: 0.85rem; font-style: italic; }
+
+/* Feature Hub */
+.feature-hub-section { margin-bottom: 2rem; }
+.feature-hub-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+.fhub-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.25rem; cursor: pointer; text-align: center; transition: all 0.3s ease; }
+.fhub-card:hover { background: rgba(255,255,255,0.08); border-color: var(--accent, #4facfe); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+.fhub-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.fhub-card h4 { margin: 0 0 0.25rem; font-size: 0.95rem; color: rgba(255,255,255,0.9); }
+.fhub-card p { margin: 0; font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
+@media (max-width: 768px) {
+  .inspiration-grid { grid-template-columns: 1fr; }
+  .feature-hub-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>

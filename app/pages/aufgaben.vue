@@ -3,12 +3,12 @@
     <div class="page-header">
       <div class="header-left">
         <button class="back-button" @click="navigateTo('/dashboard')">
-          <UIcon name="i-lucide-arrow-left" />
+          <UIcon name="i-heroicons-arrow-left" />
           <span>Zurück</span>
         </button>
         <div class="header-title">
           <h1>
-            <UIcon name="i-lucide-check-square" class="header-icon" />
+            <UIcon name="i-heroicons-check-square" class="header-icon" />
             Aufgaben Manager
           </h1>
           <p class="subtitle" v-if="isAuthenticated">{{ incompleteTasks.length }} offen • {{ completedTasks.length }} erledigt</p>
@@ -16,10 +16,10 @@
       </div>
       <div class="header-right">
         <button v-if="isAuthenticated" class="icon-button refresh-btn" @click="loadTasks" :disabled="isLoading" title="Aktualisieren">
-          <UIcon name="i-lucide-refresh-cw" :class="{ spinning: isLoading }" />
+          <UIcon name="i-heroicons-refresh-cw" :class="{ spinning: isLoading }" />
         </button>
         <button v-if="isAuthenticated" class="signout-button" @click="handleSignOut">
-          <UIcon name="i-lucide-log-out" />
+          <UIcon name="i-heroicons-log-out" />
           <span>Abmelden</span>
         </button>
       </div>
@@ -27,11 +27,11 @@
 
     <!-- Not Authenticated -->
     <div v-if="!isAuthenticated" class="auth-card">
-      <UIcon name="i-lucide-lock" class="auth-icon" />
+      <UIcon name="i-heroicons-lock" class="auth-icon" />
       <h2>Google Tasks Zugriff erforderlich</h2>
       <p>Melde dich mit deinem Google-Konto an, um deine Aufgaben zu verwalten.</p>
       <button class="google-signin-btn" @click="signIn">
-        <UIcon name="i-lucide-log-in" />
+        <UIcon name="i-heroicons-log-in" />
         <span>Mit Google anmelden</span>
       </button>
     </div>
@@ -41,22 +41,22 @@
       <!-- Quick Actions -->
       <div class="quick-actions">
         <button class="action-card" @click="showCreateTask = true">
-          <UIcon name="i-lucide-plus-circle" />
+          <UIcon name="i-heroicons-plus-circle" />
           <span>Neue Aufgabe</span>
         </button>
         <button class="action-card" @click="showCreateList = true">
-          <UIcon name="i-lucide-folder-plus" />
+          <UIcon name="i-heroicons-folder-plus" />
           <span>Neue Liste</span>
         </button>
         <button class="action-card" :class="{ active: showCompleted }" @click="showCompleted = !showCompleted">
-          <UIcon name="i-lucide-check-check" />
+          <UIcon name="i-heroicons-check-check" />
           <span>{{ showCompleted ? 'Erledigte ausblenden' : 'Erledigte anzeigen' }}</span>
         </button>
       </div>
 
       <!-- Error Message -->
       <div v-if="error" class="error-card">
-        <UIcon name="i-lucide-alert-circle" class="error-icon" />
+        <UIcon name="i-heroicons-alert-circle" class="error-icon" />
         <div>
           <h3>Fehler</h3>
           <p>{{ error }}</p>
@@ -65,7 +65,7 @@
 
       <!-- Loading State -->
       <div v-if="isLoading" class="loading-card">
-        <UIcon name="i-lucide-loader-2" class="loading-icon" />
+        <UIcon name="i-heroicons-loader-2" class="loading-icon" />
         <p>Aufgaben werden geladen...</p>
       </div>
 
@@ -78,7 +78,7 @@
             :class="{ active: currentFilter === 'all' }"
             @click="currentFilter = 'all'"
           >
-            <UIcon name="i-lucide-list" />
+            <UIcon name="i-heroicons-list-bullet" />
             Alle ({{ allTasks.length }})
           </button>
           <button 
@@ -86,7 +86,7 @@
             :class="{ active: currentFilter === 'today' }"
             @click="currentFilter = 'today'"
           >
-            <UIcon name="i-lucide-calendar-days" />
+            <UIcon name="i-heroicons-calendar-days" />
             Heute ({{ todayTasks.length }})
           </button>
           <button 
@@ -94,7 +94,7 @@
             :class="{ active: currentFilter === 'week' }"
             @click="currentFilter = 'week'"
           >
-            <UIcon name="i-lucide-calendar-range" />
+            <UIcon name="i-heroicons-calendar-range" />
             Diese Woche ({{ weekTasks.length }})
           </button>
           <button 
@@ -102,14 +102,14 @@
             :class="{ active: currentFilter === 'overdue' }"
             @click="currentFilter = 'overdue'"
           >
-            <UIcon name="i-lucide-alert-triangle" />
+            <UIcon name="i-heroicons-alert-triangle" />
             Überfällig ({{ overdueTasks.length }})
           </button>
         </div>
 
         <!-- Tasks by List -->
         <div v-if="filteredTasks.length === 0" class="no-tasks">
-          <UIcon name="i-lucide-check-circle-2" />
+          <UIcon name="i-heroicons-check-circle" />
           <h3>Keine Aufgaben gefunden</h3>
           <p>Erstelle eine neue Aufgabe, um loszulegen!</p>
         </div>
@@ -118,16 +118,16 @@
           <div v-for="list in taskLists" :key="list.id" class="task-list-card">
             <div class="list-header">
               <div class="list-title">
-                <UIcon name="i-lucide-folder" />
+                <UIcon name="i-heroicons-folder" />
                 <h2>{{ list.title }}</h2>
                 <span class="task-count">{{ getListTasks(list.id).length }}</span>
               </div>
               <div class="list-actions">
                 <button class="icon-btn" @click="selectedList = list.id; showCreateTask = true" title="Aufgabe hinzufügen">
-                  <UIcon name="i-lucide-plus" />
+                  <UIcon name="i-heroicons-plus" />
                 </button>
                 <button class="icon-btn delete-btn" @click="confirmDeleteList(list)" title="Liste löschen">
-                  <UIcon name="i-lucide-trash-2" />
+                  <UIcon name="i-heroicons-trash" />
                 </button>
               </div>
             </div>
@@ -144,22 +144,22 @@
                   @click="toggleTaskComplete(task)"
                   :class="{ checked: task.status === 'completed' }"
                 >
-                  <UIcon v-if="task.status === 'completed'" name="i-lucide-check" />
+                  <UIcon v-if="task.status === 'completed'" name="i-heroicons-check" />
                 </button>
                 
                 <div class="task-content" @click="viewTaskDetail(task)">
                   <div class="task-header-row">
                     <h3 class="task-title">
-                      <UIcon v-if="isTaskImportant(task)" name="i-lucide-star" class="star-icon" />
+                      <UIcon v-if="isTaskImportant(task)" name="i-heroicons-star" class="star-icon" />
                       {{ task.title }}
                     </h3>
                     <div class="task-badges">
                       <span v-if="hasSubtasks(task)" class="badge subtasks-badge">
-                        <UIcon name="i-lucide-list-tree" />
+                        <UIcon name="i-heroicons-list-tree" />
                         {{ getSubtasksCount(task) }}
                       </span>
                       <span v-if="task.links && task.links.length > 0" class="badge links-badge">
-                        <UIcon name="i-lucide-link" />
+                        <UIcon name="i-heroicons-link" />
                         {{ task.links.length }}
                       </span>
                     </div>
@@ -167,7 +167,7 @@
                   <p v-if="task.notes" class="task-notes">{{ getTaskNotesPreview(task.notes) }}</p>
                   <div v-if="task.due || (task.links && task.links.length > 0)" class="task-meta">
                     <span v-if="task.due" class="task-due" :class="{ overdue: isOverdue(task) }">
-                      <UIcon name="i-lucide-calendar" />
+                      <UIcon name="i-heroicons-calendar" />
                       {{ formatDueDate(task.due) }}
                     </span>
                   </div>
@@ -175,16 +175,16 @@
 
                 <div class="task-actions">
                   <button class="icon-btn" @click="editTask(task)" title="Bearbeiten">
-                    <UIcon name="i-lucide-pencil" />
+                    <UIcon name="i-heroicons-pencil" />
                   </button>
                   <button class="icon-btn delete-btn" @click="confirmDeleteTask(task)" title="Löschen">
-                    <UIcon name="i-lucide-trash-2" />
+                    <UIcon name="i-heroicons-trash" />
                   </button>
                 </div>
               </div>
 
               <div v-if="getListTasks(list.id).length === 0" class="empty-list">
-                <UIcon name="i-lucide-inbox" />
+                <UIcon name="i-heroicons-inbox" />
                 <p>Keine Aufgaben in dieser Liste</p>
               </div>
             </div>
@@ -198,11 +198,11 @@
       <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>
-            <UIcon :name="editingTask ? 'i-lucide-pencil' : 'i-lucide-plus-circle'" />
+            <UIcon :name="editingTask ? 'i-heroicons-pencil' : 'i-heroicons-plus-circle'" />
             {{ editingTask ? 'Aufgabe bearbeiten' : 'Neue Aufgabe' }}
           </h3>
           <button class="close-btn" @click="closeTaskModal">
-            <UIcon name="i-lucide-x" />
+            <UIcon name="i-heroicons-x-mark" />
           </button>
         </div>
 
@@ -221,7 +221,7 @@
           <div class="form-group">
             <label class="checkbox-label">
               <input type="checkbox" v-model="taskForm.important" />
-              <UIcon name="i-lucide-star" />
+              <UIcon name="i-heroicons-star" />
               Als wichtig markieren
             </label>
           </div>
@@ -270,7 +270,7 @@
           <!-- Links/Attachments Section -->
           <div class="form-section">
             <label class="section-label">
-              <UIcon name="i-lucide-link" />
+              <UIcon name="i-heroicons-link" />
               Links & Anhänge
             </label>
             
@@ -280,7 +280,7 @@
                 :key="index" 
                 class="link-item"
               >
-                <UIcon name="i-lucide-link" class="link-icon" />
+                <UIcon name="i-heroicons-link" class="link-icon" />
                 <div class="link-info">
                   <span class="link-description">{{ link.description || link.link }}</span>
                   <span class="link-url">{{ link.link }}</span>
@@ -291,7 +291,7 @@
                   @click="removeLink(index)"
                   title="Link entfernen"
                 >
-                  <UIcon name="i-lucide-x" />
+                  <UIcon name="i-heroicons-x-mark" />
                 </button>
               </div>
             </div>
@@ -315,7 +315,7 @@
                 @click="addLink"
                 :disabled="!newLinkUrl"
               >
-                <UIcon name="i-lucide-plus" />
+                <UIcon name="i-heroicons-plus" />
                 Link hinzufügen
               </button>
             </div>
@@ -327,7 +327,7 @@
             Abbrechen
           </button>
           <button class="btn btn-primary" @click="saveTask" :disabled="!taskForm.title">
-            <UIcon name="i-lucide-save" />
+            <UIcon name="i-heroicons-arrow-down-tray" />
             {{ editingTask ? 'Speichern' : 'Erstellen' }}
           </button>
         </div>
@@ -339,11 +339,11 @@
       <div class="modal-content small" @click.stop>
         <div class="modal-header">
           <h3>
-            <UIcon name="i-lucide-folder-plus" />
+            <UIcon name="i-heroicons-folder-plus" />
             Neue Liste erstellen
           </h3>
           <button class="close-btn" @click="showCreateList = false">
-            <UIcon name="i-lucide-x" />
+            <UIcon name="i-heroicons-x-mark" />
           </button>
         </div>
 
@@ -365,7 +365,7 @@
             Abbrechen
           </button>
           <button class="btn btn-primary" @click="createList" :disabled="!newListName">
-            <UIcon name="i-lucide-plus" />
+            <UIcon name="i-heroicons-plus" />
             Erstellen
           </button>
         </div>
@@ -376,7 +376,7 @@
     <div v-if="showDeleteConfirm" class="modal-overlay" @click="showDeleteConfirm = false">
       <div class="modal-content small" @click.stop>
         <div class="modal-header danger">
-          <UIcon name="i-lucide-alert-triangle" class="modal-icon" />
+          <UIcon name="i-heroicons-alert-triangle" class="modal-icon" />
           <h3>{{ deleteTarget?.type === 'list' ? 'Liste löschen?' : 'Aufgabe löschen?' }}</h3>
         </div>
         <p class="modal-text">
@@ -389,7 +389,7 @@
             Abbrechen
           </button>
           <button class="btn btn-danger" @click="handleDelete">
-            <UIcon name="i-lucide-trash-2" />
+            <UIcon name="i-heroicons-trash" />
             Löschen
           </button>
         </div>

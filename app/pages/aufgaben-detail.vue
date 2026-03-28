@@ -2,14 +2,14 @@
   <div class="task-detail-page">
     <div class="page-header">
       <button class="back-button" @click="navigateTo('/aufgaben')">
-        <UIcon name="i-lucide-arrow-left" />
+        <UIcon name="i-heroicons-arrow-left" />
         <span>Zurück</span>
       </button>
     </div>
 
     <!-- Loading -->
     <div v-if="isLoading" class="loading-card">
-      <UIcon name="i-lucide-loader-2" class="loading-icon" />
+      <UIcon name="i-heroicons-loader-2" class="loading-icon" />
       <p>Wird geladen...</p>
     </div>
 
@@ -23,13 +23,13 @@
             @click="toggleImportant"
             title="Als wichtig markieren"
           >
-            <UIcon :name="isImportant ? 'i-lucide-star' : 'i-lucide-star'" />
+            <UIcon :name="isImportant ? 'i-heroicons-star' : 'i-heroicons-star'" />
           </button>
           <button class="icon-btn" @click="showEditor = true">
-            <UIcon name="i-lucide-pencil" />
+            <UIcon name="i-heroicons-pencil" />
           </button>
           <button class="icon-btn delete-btn" @click="confirmDelete">
-            <UIcon name="i-lucide-trash-2" />
+            <UIcon name="i-heroicons-trash" />
           </button>
         </div>
         <h1>{{ task.title }}</h1>
@@ -39,12 +39,12 @@
       <!-- Main Info -->
       <div class="detail-sections">
         <div class="detail-section" v-if="task.due">
-          <UIcon name="i-lucide-calendar" />
+          <UIcon name="i-heroicons-calendar" />
           <span>Fällig am {{ formatDate(task.due) }}</span>
         </div>
 
         <div class="detail-section" v-if="task.links && task.links.length > 0">
-          <UIcon name="i-lucide-link" />
+          <UIcon name="i-heroicons-link" />
           <div class="links-list">
             <a 
               v-for="link in task.links" 
@@ -54,7 +54,7 @@
               class="task-link"
             >
               {{ link.description || link.link }}
-              <UIcon name="i-lucide-external-link" />
+              <UIcon name="i-heroicons-external-link" />
             </a>
           </div>
         </div>
@@ -64,11 +64,11 @@
       <div class="subtasks-section">
         <div class="section-header">
           <h3>
-            <UIcon name="i-lucide-list-tree" />
+            <UIcon name="i-heroicons-list-tree" />
             Teilaufgaben
           </h3>
           <button class="btn-add-subtask" @click="showSubtaskInput = true">
-            <UIcon name="i-lucide-plus" />
+            <UIcon name="i-heroicons-plus" />
             Hinzufügen
           </button>
         </div>
@@ -81,10 +81,10 @@
             @keyup.esc="showSubtaskInput = false"
           />
           <button @click="addSubtask">
-            <UIcon name="i-lucide-check" />
+            <UIcon name="i-heroicons-check" />
           </button>
           <button @click="showSubtaskInput = false">
-            <UIcon name="i-lucide-x" />
+            <UIcon name="i-heroicons-x-mark" />
           </button>
         </div>
 
@@ -100,15 +100,15 @@
               :class="{ checked: subtask.status === 'completed' }"
               @click="toggleSubtask(subtask)"
             >
-              <UIcon v-if="subtask.status === 'completed'" name="i-lucide-check" />
+              <UIcon v-if="subtask.status === 'completed'" name="i-heroicons-check" />
             </button>
             <span>{{ subtask.title }}</span>
             <button class="icon-btn-small delete-btn" @click="deleteSubtask(subtask)">
-              <UIcon name="i-lucide-trash-2" />
+              <UIcon name="i-heroicons-trash" />
             </button>
           </div>
           <div v-if="subtasks.length === 0" class="no-subtasks">
-            <UIcon name="i-lucide-inbox" />
+            <UIcon name="i-heroicons-inbox" />
             <p>Keine Teilaufgaben</p>
           </div>
         </div>

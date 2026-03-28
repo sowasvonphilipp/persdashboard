@@ -3,12 +3,12 @@
     <div class="page-header">
       <div class="header-left">
         <button class="back-button" @click="navigateTo('/dashboard')">
-          <UIcon name="i-lucide-arrow-left" />
+          <UIcon name="i-heroicons-arrow-left" />
           <span>Zurück</span>
         </button>
         <div class="header-title">
           <h1>
-            <UIcon name="i-lucide-sparkles" class="header-icon sparkle" />
+            <UIcon name="i-heroicons-sparkles" class="header-icon sparkle" />
             Kalender Manager Pro
           </h1>
           <p class="subtitle" v-if="isAuthenticated">{{ allEvents.length }} Termine • 7 Tage</p>
@@ -16,10 +16,10 @@
       </div>
       <div class="header-right">
         <button v-if="isAuthenticated" class="icon-button refresh-btn" @click="fetchEvents" :disabled="isLoading" title="Aktualisieren">
-          <UIcon name="i-lucide-refresh-cw" :class="{ spinning: isLoading }" />
+          <UIcon name="i-heroicons-refresh-cw" :class="{ spinning: isLoading }" />
         </button>
         <button v-if="isAuthenticated" class="signout-button" @click="handleSignOut">
-          <UIcon name="i-lucide-log-out" />
+          <UIcon name="i-heroicons-log-out" />
           <span>Abmelden</span>
         </button>
       </div>
@@ -27,22 +27,22 @@
 
     <!-- Not Authenticated -->
     <div v-if="!isAuthenticated" class="auth-card">
-      <UIcon name="i-lucide-lock" class="auth-icon" />
+      <UIcon name="i-heroicons-lock" class="auth-icon" />
       <h2>Google Calendar Zugriff erforderlich</h2>
       <p>Melde dich mit deinem Google-Konto an, um deinen Kalender zu verwalten.</p>
       <div v-if="authError" class="auth-error">
-        <UIcon name="i-lucide-alert-circle" />
+        <UIcon name="i-heroicons-alert-circle" />
         <p>{{ authError }}</p>
       </div>
       <button class="google-signin-btn" @click="signIn">
-        <UIcon name="i-lucide-log-in" />
+        <UIcon name="i-heroicons-log-in" />
         <span>Mit Google anmelden</span>
       </button>
       
       <!-- Troubleshooting Section -->
       <div v-if="authError" class="troubleshooting">
         <button class="troubleshooting-toggle" @click="showTroubleshooting = !showTroubleshooting">
-          <UIcon name="i-lucide-help-circle" />
+          <UIcon name="i-heroicons-help-circle" />
           {{ showTroubleshooting ? 'Hilfe ausblenden' : 'Fehlerbehebung anzeigen' }}
         </button>
         
@@ -89,7 +89,7 @@
       <!-- Search and Filters -->
       <div class="controls-bar">
         <div class="search-box">
-          <UIcon name="i-lucide-search" class="search-icon" />
+          <UIcon name="i-heroicons-magnifying-glass" class="search-icon" />
           <input 
             v-model="searchQuery" 
             type="text" 
@@ -97,7 +97,7 @@
             class="search-input"
           />
           <button v-if="searchQuery" @click="searchQuery = ''" class="clear-search">
-            <UIcon name="i-lucide-x" />
+            <UIcon name="i-heroicons-x-mark" />
           </button>
         </div>
         
@@ -108,7 +108,7 @@
             @click="filterCategory = 'all'"
             title="Alle"
           >
-            <UIcon name="i-lucide-grid-3x3" />
+            <UIcon name="i-heroicons-grid-3x3" />
             <span class="badge">{{ allEvents.length }}</span>
           </button>
           <button 
@@ -117,7 +117,7 @@
             @click="filterCategory = 'work'"
             title="Arbeit"
           >
-            <UIcon name="i-lucide-briefcase" />
+            <UIcon name="i-heroicons-briefcase" />
           </button>
           <button 
             class="filter-btn" 
@@ -125,7 +125,7 @@
             @click="filterCategory = 'personal'"
             title="Persönlich"
           >
-            <UIcon name="i-lucide-user" />
+            <UIcon name="i-heroicons-user" />
           </button>
           <button 
             class="filter-btn" 
@@ -133,7 +133,7 @@
             @click="filterCategory = 'meeting'"
             title="Meetings"
           >
-            <UIcon name="i-lucide-users" />
+            <UIcon name="i-heroicons-users" />
           </button>
           <button 
             class="filter-btn" 
@@ -141,12 +141,12 @@
             @click="filterCategory = 'birthday'"
             title="Geburtstage"
           >
-            <UIcon name="i-lucide-cake" />
+            <UIcon name="i-heroicons-cake" />
           </button>
         </div>
 
         <button class="quick-add-btn" @click="() => { currentView = 'create'; resetForm(); }">
-          <UIcon name="i-lucide-plus" />
+          <UIcon name="i-heroicons-plus" />
           <span>Schnell erstellen</span>
         </button>
       </div>
@@ -158,7 +158,7 @@
           :class="{ active: currentView === 'list' }"
           @click="currentView = 'list'"
         >
-          <UIcon name="i-lucide-list" />
+          <UIcon name="i-heroicons-list-bullet" />
           <span>Liste</span>
           <span class="tab-badge">{{ filteredEvents.length }}</span>
         </button>
@@ -167,7 +167,7 @@
           :class="{ active: currentView === 'grid' }"
           @click="currentView = 'grid'"
         >
-          <UIcon name="i-lucide-calendar" />
+          <UIcon name="i-heroicons-calendar" />
           <span>Kalender</span>
         </button>
         <button 
@@ -175,14 +175,14 @@
           :class="{ active: currentView === 'timeline' }"
           @click="currentView = 'timeline'"
         >
-          <UIcon name="i-lucide-activity" />
+          <UIcon name="i-heroicons-activity" />
           <span>Timeline</span>
         </button>
         <button 
           class="tab-button" 
           @click="navigateTo('/aufgaben')"
         >
-          <UIcon name="i-lucide-check-square" />
+          <UIcon name="i-heroicons-check-square" />
           <span>Aufgaben</span>
           <span class="tab-badge">{{ tasks.length }}</span>
         </button>
@@ -191,7 +191,7 @@
           :class="{ active: currentView === 'analytics' }"
           @click="currentView = 'analytics'"
         >
-          <UIcon name="i-lucide-bar-chart-3" />
+          <UIcon name="i-heroicons-chart-bar" />
           <span>Statistiken</span>
         </button>
         <button 
@@ -199,14 +199,14 @@
           :class="{ active: currentView === 'create' }"
           @click="currentView = 'create'"
         >
-          <UIcon name="i-lucide-plus-circle" />
+          <UIcon name="i-heroicons-plus-circle" />
           <span>Erstellen</span>
         </button>
       </div>
 
       <!-- Error Message -->
       <div v-if="calendarError" class="error-card">
-        <UIcon name="i-lucide-alert-circle" class="error-icon" />
+        <UIcon name="i-heroicons-alert-circle" class="error-icon" />
         <div>
           <h3>Fehler</h3>
           <p>{{ calendarError }}</p>
@@ -215,7 +215,7 @@
 
       <!-- Loading State -->
       <div v-if="isLoading" class="loading-card">
-        <UIcon name="i-lucide-loader-2" class="loading-icon" />
+        <UIcon name="i-heroicons-loader-2" class="loading-icon" />
         <p>Termine werden geladen...</p>
       </div>
 
@@ -225,21 +225,21 @@
         <div class="events-section">
           <div class="section-header">
             <h2>
-              <UIcon name="i-lucide-calendar-days" />
+              <UIcon name="i-heroicons-calendar-days" />
               Heute
               <span class="count-badge">{{ todayEvents.length }}</span>
             </h2>
             <div class="view-options">
               <button class="view-option-btn" :class="{ active: listViewType === 'cards' }" @click="listViewType = 'cards'" title="Karten">
-                <UIcon name="i-lucide-square" />
+                <UIcon name="i-heroicons-square" />
               </button>
               <button class="view-option-btn" :class="{ active: listViewType === 'compact' }" @click="listViewType = 'compact'" title="Kompakt">
-                <UIcon name="i-lucide-list" />
+                <UIcon name="i-heroicons-list-bullet" />
               </button>
             </div>
           </div>
           <div v-if="todayEvents.length === 0" class="no-events">
-            <UIcon name="i-lucide-check-circle" />
+            <UIcon name="i-heroicons-check-circle" />
             <p>Keine Termine heute</p>
             <span class="emoji">🎉</span>
           </div>
@@ -252,19 +252,19 @@
                     <UIcon :name="getEventIcon(event)" :style="{ color: getEventColor(event) }" />
                   </div>
                   <div class="event-time">
-                    <UIcon name="i-lucide-clock" />
+                    <UIcon name="i-heroicons-clock" />
                     <span>{{ formatEventTime(event) }}</span>
                   </div>
                   <div class="event-badges">
                     <span v-if="isEventSoon(event)" class="badge badge-warning">
-                      <UIcon name="i-lucide-zap" />
+                      <UIcon name="i-heroicons-zap" />
                       Bald
                     </span>
                     <span v-if="event.location" class="badge badge-info">
-                      <UIcon name="i-lucide-map-pin" />
+                      <UIcon name="i-heroicons-map-pin" />
                     </span>
                     <span v-if="getEventPriority(event) === 'high'" class="badge badge-danger">
-                      <UIcon name="i-lucide-alert-circle" />
+                      <UIcon name="i-heroicons-alert-circle" />
                     </span>
                   </div>
                 </div>
@@ -272,11 +272,11 @@
                   <h3>{{ event.summary || 'Kein Titel' }}</h3>
                   <div class="event-meta">
                     <p v-if="event.location" class="event-location">
-                      <UIcon name="i-lucide-map-pin" />
+                      <UIcon name="i-heroicons-map-pin" />
                       {{ event.location }}
                     </p>
                     <p v-if="event.description" class="event-description">
-                      <UIcon name="i-lucide-align-left" />
+                      <UIcon name="i-heroicons-align-left" />
                       {{ event.description }}
                     </p>
                   </div>
@@ -284,13 +284,13 @@
               </div>
               <div class="event-actions">
                 <button class="action-btn" @click.stop="duplicateEvent(event)" title="Duplizieren">
-                  <UIcon name="i-lucide-copy" />
+                  <UIcon name="i-heroicons-clipboard-document" />
                 </button>
                 <button class="action-btn" @click.stop="startEditEvent(event)" title="Bearbeiten">
-                  <UIcon name="i-lucide-pencil" />
+                  <UIcon name="i-heroicons-pencil" />
                 </button>
                 <button class="action-btn delete-btn" @click="confirmDeleteEvent(event)" title="Löschen">
-                  <UIcon name="i-lucide-trash-2" />
+                  <UIcon name="i-heroicons-trash" />
                 </button>
               </div>
             </div>
@@ -301,13 +301,13 @@
         <div class="events-section">
           <div class="section-header">
             <h2>
-              <UIcon name="i-lucide-calendar-clock" />
+              <UIcon name="i-heroicons-calendar" />
               Kommende Termine (7 Tage)
               <span class="count-badge">{{ upcomingEvents.length }}</span>
             </h2>
           </div>
           <div v-if="upcomingEvents.length === 0" class="no-events">
-            <UIcon name="i-lucide-inbox" />
+            <UIcon name="i-heroicons-inbox" />
             <p>Keine kommenden Termine</p>
             <span class="emoji">📅</span>
           </div>
@@ -329,15 +329,15 @@
                         <UIcon :name="getEventIcon(event)" :style="{ color: getEventColor(event) }" />
                       </div>
                       <div class="event-time">
-                        <UIcon name="i-lucide-clock" />
+                        <UIcon name="i-heroicons-clock" />
                         <span>{{ formatEventTime(event) }}</span>
                       </div>
                       <div class="event-badges">
                         <span v-if="event.location" class="badge badge-info">
-                          <UIcon name="i-lucide-map-pin" />
+                          <UIcon name="i-heroicons-map-pin" />
                         </span>
                         <span v-if="getEventPriority(event) === 'high'" class="badge badge-danger">
-                          <UIcon name="i-lucide-alert-circle" />
+                          <UIcon name="i-heroicons-alert-circle" />
                         </span>
                       </div>
                     </div>
@@ -345,11 +345,11 @@
                       <h3>{{ event.summary || 'Kein Titel' }}</h3>
                       <div class="event-meta">
                         <p v-if="event.location" class="event-location">
-                          <UIcon name="i-lucide-map-pin" />
+                          <UIcon name="i-heroicons-map-pin" />
                           {{ event.location }}
                         </p>
                         <p v-if="event.description" class="event-description">
-                          <UIcon name="i-lucide-align-left" />
+                          <UIcon name="i-heroicons-align-left" />
                           {{ event.description }}
                         </p>
                       </div>
@@ -357,13 +357,13 @@
                   </div>
                   <div class="event-actions">
                     <button class="action-btn" @click.stop="duplicateEvent(event)" title="Duplizieren">
-                      <UIcon name="i-lucide-copy" />
+                      <UIcon name="i-heroicons-clipboard-document" />
                     </button>
                     <button class="action-btn" @click.stop="startEditEvent(event)" title="Bearbeiten">
-                      <UIcon name="i-lucide-pencil" />
+                      <UIcon name="i-heroicons-pencil" />
                     </button>
                     <button class="action-btn delete-btn" @click.stop="confirmDeleteEvent(event)" title="Löschen">
-                      <UIcon name="i-lucide-trash-2" />
+                      <UIcon name="i-heroicons-trash" />
                     </button>
                   </div>
                 </div>
@@ -378,18 +378,18 @@
         <div class="mini-calendar">
           <div class="calendar-header">
             <h2>
-              <UIcon name="i-lucide-calendar" />
+              <UIcon name="i-heroicons-calendar" />
               {{ currentMonth }} {{ currentYear }}
             </h2>
             <div class="calendar-nav">
               <button @click="previousWeek" class="nav-btn">
-                <UIcon name="i-lucide-chevron-left" />
+                <UIcon name="i-heroicons-chevron-left" />
               </button>
               <button @click="goToToday" class="nav-btn today-btn">
                 Heute
               </button>
               <button @click="nextWeek" class="nav-btn">
-                <UIcon name="i-lucide-chevron-right" />
+                <UIcon name="i-heroicons-chevron-right" />
               </button>
             </div>
           </div>
@@ -434,15 +434,15 @@
           <div v-if="selectedDay" class="selected-day-details">
             <div class="details-header">
               <h3>
-                <UIcon name="i-lucide-calendar-days" />
+                <UIcon name="i-heroicons-calendar-days" />
                 {{ selectedDay.dayName }}, {{ selectedDay.dateStr }}
               </h3>
               <button @click="selectedDay = null" class="close-btn">
-                <UIcon name="i-lucide-x" />
+                <UIcon name="i-heroicons-x-mark" />
               </button>
             </div>
             <div v-if="selectedDay.events.length === 0" class="no-events">
-              <UIcon name="i-lucide-inbox" />
+              <UIcon name="i-heroicons-inbox" />
               <p>Keine Termine an diesem Tag</p>
             </div>
             <div v-else class="day-events-list">
@@ -450,21 +450,21 @@
                 <div class="event-indicator" :style="{ background: getEventColor(event) }"></div>
                 <div class="event-info">
                   <div class="event-time-badge">
-                    <UIcon name="i-lucide-clock" />
+                    <UIcon name="i-heroicons-clock" />
                     {{ formatEventTime(event) }}
                   </div>
                   <h4>{{ event.summary }}</h4>
                   <p v-if="event.location">
-                    <UIcon name="i-lucide-map-pin" />
+                    <UIcon name="i-heroicons-map-pin" />
                     {{ event.location }}
                   </p>
                 </div>
                 <div class="event-quick-actions">
                   <button @click="startEditEvent(event)" class="quick-action-btn">
-                    <UIcon name="i-lucide-pencil" />
+                    <UIcon name="i-heroicons-pencil" />
                   </button>
                   <button @click="confirmDeleteEvent(event)" class="quick-action-btn delete">
-                    <UIcon name="i-lucide-trash-2" />
+                    <UIcon name="i-heroicons-trash" />
                   </button>
                 </div>
               </div>
@@ -476,12 +476,12 @@
       <!-- Timeline View -->
       <div v-else-if="currentView === 'timeline'" class="timeline-content">
         <h2 class="section-title">
-          <UIcon name="i-lucide-activity" />
+          <UIcon name="i-heroicons-activity" />
           Timeline Ansicht
         </h2>
         
         <div v-if="isLoading" class="loading-card">
-          <UIcon name="i-lucide-loader-2" class="loading-icon" />
+          <UIcon name="i-heroicons-loader-2" class="loading-icon" />
           <p>Timeline wird geladen...</p>
         </div>
         
@@ -498,7 +498,7 @@
             <div class="timeline-events">
               <div v-for="event in dayGroup.events" :key="event.id" class="timeline-event" :class="getEventCategoryClass(event)">
                 <div class="timeline-event-time">
-                  <UIcon name="i-lucide-clock" />
+                  <UIcon name="i-heroicons-clock" />
                   <span>{{ formatEventTime(event) }}</span>
                 </div>
                 <div class="timeline-event-card" @click="navigateToEvent(event)">
@@ -509,16 +509,16 @@
                     <h4>{{ event.summary }}</h4>
                     <div class="timeline-actions">
                       <button @click.stop="startEditEvent(event)" class="timeline-action-btn">
-                        <UIcon name="i-lucide-pencil" />
+                        <UIcon name="i-heroicons-pencil" />
                       </button>
                       <button @click.stop="confirmDeleteEvent(event)" class="timeline-action-btn delete">
-                        <UIcon name="i-lucide-trash-2" />
+                        <UIcon name="i-heroicons-trash" />
                       </button>
                     </div>
                   </div>
                   <div v-if="event.location || event.description" class="timeline-event-details">
                     <p v-if="event.location" class="timeline-location">
-                      <UIcon name="i-lucide-map-pin" />
+                      <UIcon name="i-heroicons-map-pin" />
                       {{ event.location }}
                     </p>
                     <p v-if="event.description" class="timeline-description">
@@ -531,7 +531,7 @@
           </div>
           
           <div v-if="timelineEvents.length === 0" class="no-events">
-            <UIcon name="i-lucide-calendar-x" />
+            <UIcon name="i-heroicons-calendar-x" />
             <p>Keine Events in der Timeline</p>
             <span class="emoji">📅</span>
           </div>
@@ -542,11 +542,11 @@
       <div v-else-if="currentView === 'tasks'" class="tasks-content">
         <div class="tasks-header">
           <h2 class="section-title">
-            <UIcon name="i-lucide-check-square" />
+            <UIcon name="i-heroicons-check-square" />
             Aufgaben
           </h2>
           <button @click="addNewTask" class="add-task-btn">
-            <UIcon name="i-lucide-plus" />
+            <UIcon name="i-heroicons-plus" />
             <span>Neue Aufgabe</span>
           </button>
         </div>
@@ -555,7 +555,7 @@
         <div v-if="showTaskInput" class="task-form-container">
           <div class="task-form">
             <h3 class="form-subtitle">
-              <UIcon :name="editingTaskId ? 'i-lucide-edit-3' : 'i-lucide-plus-circle'" />
+              <UIcon :name="editingTaskId ? 'i-heroicons-edit-3' : 'i-heroicons-plus-circle'" />
               {{ editingTaskId ? 'Aufgabe bearbeiten' : 'Neue Aufgabe erstellen' }}
             </h3>
             
@@ -563,7 +563,7 @@
               <!-- Title -->
               <div class="form-group full-width">
                 <label>
-                  <UIcon name="i-lucide-text" />
+                  <UIcon name="i-heroicons-text" />
                   Titel *
                 </label>
                 <input 
@@ -578,7 +578,7 @@
               <!-- Description -->
               <div class="form-group full-width">
                 <label>
-                  <UIcon name="i-lucide-align-left" />
+                  <UIcon name="i-heroicons-align-left" />
                   Beschreibung
                 </label>
                 <textarea 
@@ -592,7 +592,7 @@
               <!-- Due Date -->
               <div class="form-group">
                 <label>
-                  <UIcon name="i-lucide-calendar" />
+                  <UIcon name="i-heroicons-calendar" />
                   Fälligkeitsdatum
                 </label>
                 <input 
@@ -605,7 +605,7 @@
               <!-- Due Time -->
               <div class="form-group">
                 <label>
-                  <UIcon name="i-lucide-clock" />
+                  <UIcon name="i-heroicons-clock" />
                   Uhrzeit
                 </label>
                 <input 
@@ -618,7 +618,7 @@
               <!-- Priority -->
               <div class="form-group">
                 <label>
-                  <UIcon name="i-lucide-flag" />
+                  <UIcon name="i-heroicons-flag" />
                   Priorität
                 </label>
                 <select v-model="taskForm.priority" class="form-select">
@@ -632,7 +632,7 @@
               <!-- Category -->
               <div class="form-group">
                 <label>
-                  <UIcon name="i-lucide-folder" />
+                  <UIcon name="i-heroicons-folder" />
                   Kategorie
                 </label>
                 <select v-model="taskForm.category" class="form-select">
@@ -648,7 +648,7 @@
               <!-- Tags -->
               <div class="form-group full-width">
                 <label>
-                  <UIcon name="i-lucide-tags" />
+                  <UIcon name="i-heroicons-tags" />
                   Tags (durch Komma getrennt)
                 </label>
                 <input 
@@ -662,7 +662,7 @@
               <!-- Notes -->
               <div class="form-group full-width">
                 <label>
-                  <UIcon name="i-lucide-sticky-note" />
+                  <UIcon name="i-heroicons-sticky-note" />
                   Notizen
                 </label>
                 <textarea 
@@ -676,11 +676,11 @@
             
             <div class="form-actions">
               <button @click="saveTask" class="btn btn-primary">
-                <UIcon name="i-lucide-check" />
+                <UIcon name="i-heroicons-check" />
                 {{ editingTaskId ? 'Speichern' : 'Aufgabe erstellen' }}
               </button>
               <button @click="cancelTaskInput" class="btn btn-secondary">
-                <UIcon name="i-lucide-x" />
+                <UIcon name="i-heroicons-x-mark" />
                 Abbrechen
               </button>
             </div>
@@ -705,25 +705,25 @@
           <!-- Active Tasks -->
           <div class="tasks-section">
             <h3 class="tasks-section-title">
-              <UIcon name="i-lucide-circle-dashed" />
+              <UIcon name="i-heroicons-circle-dashed" />
               Offen ({{ filteredActiveTasks.length }})
             </h3>
             <div v-if="filteredActiveTasks.length === 0" class="no-tasks">
-              <UIcon name="i-lucide-check-circle" />
+              <UIcon name="i-heroicons-check-circle" />
               <p>Keine offenen Aufgaben</p>
             </div>
             <div v-else class="tasks-list">
               <div v-for="task in filteredActiveTasks" :key="task.id" class="task-item" :class="[`priority-${task.priority}`, { 'overdue': isTaskOverdue(task) }]">
                 <button @click="toggleTask(task.id)" class="task-checkbox">
-                  <UIcon v-if="task.completed" name="i-lucide-check-circle-2" class="checked" />
-                  <UIcon v-else name="i-lucide-circle" class="unchecked" />
+                  <UIcon v-if="task.completed" name="i-heroicons-check-circle" class="checked" />
+                  <UIcon v-else name="i-heroicons-circle" class="unchecked" />
                 </button>
                 <div class="task-content">
                   <div class="task-main">
                     <h4 class="task-title" :class="{ completed: task.completed }">{{ task.title }}</h4>
                     <div class="task-badges">
                       <span class="task-badge priority" :class="`priority-${task.priority}`">
-                        <UIcon name="i-lucide-flag" />
+                        <UIcon name="i-heroicons-flag" />
                         {{ getPriorityLabel(task.priority) }}
                       </span>
                       <span class="task-badge category" :class="`category-${task.category}`">
@@ -731,7 +731,7 @@
                         {{ getCategoryLabel(task.category) }}
                       </span>
                       <span v-if="isTaskOverdue(task)" class="task-badge overdue">
-                        <UIcon name="i-lucide-alert-circle" />
+                        <UIcon name="i-heroicons-alert-circle" />
                         Überfällig
                       </span>
                     </div>
@@ -739,27 +739,27 @@
                   <p v-if="task.description" class="task-description">{{ task.description }}</p>
                   <div class="task-meta">
                     <span v-if="task.dueDate" class="task-due">
-                      <UIcon name="i-lucide-calendar-clock" />
+                      <UIcon name="i-heroicons-calendar" />
                       {{ formatTaskDueDate(task.dueDate, task.dueTime) }}
                     </span>
                     <span class="task-date">
-                      <UIcon name="i-lucide-clock-3" />
+                      <UIcon name="i-heroicons-clock-3" />
                       Erstellt: {{ formatTaskDate(task.createdAt) }}
                     </span>
                   </div>
                   <div v-if="task.tags && task.tags.length > 0" class="task-tags">
                     <span v-for="tag in task.tags" :key="tag" class="task-tag">
-                      <UIcon name="i-lucide-tag" />
+                      <UIcon name="i-heroicons-tag" />
                       {{ tag }}
                     </span>
                   </div>
                 </div>
                 <div class="task-actions">
                   <button @click="startEditTask(task)" class="task-action-btn" title="Bearbeiten">
-                    <UIcon name="i-lucide-pencil" />
+                    <UIcon name="i-heroicons-pencil" />
                   </button>
                   <button @click="deleteTask(task.id)" class="task-action-btn delete" title="Löschen">
-                    <UIcon name="i-lucide-trash-2" />
+                    <UIcon name="i-heroicons-trash" />
                   </button>
                 </div>
               </div>
@@ -769,17 +769,17 @@
           <!-- Completed Tasks -->
           <div class="tasks-section">
             <h3 class="tasks-section-title">
-              <UIcon name="i-lucide-check-circle-2" />
+              <UIcon name="i-heroicons-check-circle" />
               Erledigt ({{ filteredCompletedTasks.length }})
             </h3>
             <div v-if="filteredCompletedTasks.length === 0" class="no-tasks">
-              <UIcon name="i-lucide-inbox" />
+              <UIcon name="i-heroicons-inbox" />
               <p>Keine erledigten Aufgaben</p>
             </div>
             <div v-else class="tasks-list">
               <div v-for="task in filteredCompletedTasks" :key="task.id" class="task-item completed">
                 <button @click="toggleTask(task.id)" class="task-checkbox">
-                  <UIcon name="i-lucide-check-circle-2" class="checked" />
+                  <UIcon name="i-heroicons-check-circle" class="checked" />
                 </button>
                 <div class="task-content">
                   <div class="task-main">
@@ -788,14 +788,14 @@
                   <p v-if="task.description" class="task-description completed">{{ task.description }}</p>
                   <div class="task-meta">
                     <span class="task-date">
-                      <UIcon name="i-lucide-check-circle" />
+                      <UIcon name="i-heroicons-check-circle" />
                       Erledigt: {{ formatTaskDate(task.completedAt) }}
                     </span>
                   </div>
                 </div>
                 <div class="task-actions">
                   <button @click="deleteTask(task.id)" class="task-action-btn delete" title="Löschen">
-                    <UIcon name="i-lucide-trash-2" />
+                    <UIcon name="i-heroicons-trash" />
                   </button>
                 </div>
               </div>
@@ -807,19 +807,19 @@
       <!-- Analytics View -->
       <div v-else-if="currentView === 'analytics'" class="analytics-content">
         <h2 class="section-title">
-          <UIcon name="i-lucide-bar-chart-3" />
+          <UIcon name="i-heroicons-chart-bar" />
           Kalender Statistiken
         </h2>
         
         <div v-if="isLoadingStats" class="loading-card">
-          <UIcon name="i-lucide-loader-2" class="loading-icon" />
+          <UIcon name="i-heroicons-loader-2" class="loading-icon" />
           <p>Statistiken werden berechnet...</p>
         </div>
         
         <div v-else-if="statistics" class="stats-grid">
           <div class="stat-card">
             <div class="stat-icon">
-              <UIcon name="i-lucide-calendar-check" />
+              <UIcon name="i-heroicons-calendar-check" />
             </div>
             <div class="stat-content">
               <h3>{{ statistics.totalEvents }}</h3>
@@ -829,7 +829,7 @@
           
           <div class="stat-card">
             <div class="stat-icon">
-              <UIcon name="i-lucide-clock" />
+              <UIcon name="i-heroicons-clock" />
             </div>
             <div class="stat-content">
               <h3>{{ statistics.totalHours }}h</h3>
@@ -839,7 +839,7 @@
           
           <div class="stat-card">
             <div class="stat-icon">
-              <UIcon name="i-lucide-timer" />
+              <UIcon name="i-heroicons-timer" />
             </div>
             <div class="stat-content">
               <h3>{{ statistics.averageEventDuration }} min</h3>
@@ -849,7 +849,7 @@
           
           <div class="stat-card">
             <div class="stat-icon">
-              <UIcon name="i-lucide-map-pin" />
+              <UIcon name="i-heroicons-map-pin" />
             </div>
             <div class="stat-content">
               <h3>{{ statistics.eventsWithLocation }}</h3>
@@ -859,7 +859,7 @@
           
           <div class="stat-card">
             <div class="stat-icon">
-              <UIcon name="i-lucide-sunrise" />
+              <UIcon name="i-heroicons-sunrise" />
             </div>
             <div class="stat-content">
               <h3>{{ statistics.allDayEvents }}</h3>
@@ -869,7 +869,7 @@
           
           <div class="stat-card">
             <div class="stat-icon">
-              <UIcon name="i-lucide-calendar-range" />
+              <UIcon name="i-heroicons-calendar-range" />
             </div>
             <div class="stat-content">
               <h3>{{ statistics.timedEvents }}</h3>
@@ -883,11 +883,11 @@
       <div v-else-if="currentView === 'create'" class="create-content">
         <div class="form-header">
           <h2 class="section-title">
-            <UIcon :name="editingEvent ? 'i-lucide-pencil' : 'i-lucide-sparkles'" />
+            <UIcon :name="editingEvent ? 'i-heroicons-pencil' : 'i-heroicons-sparkles'" />
             {{ editingEvent ? 'Termin bearbeiten' : 'Neuer Termin' }}
           </h2>
           <button v-if="editingEvent" type="button" class="btn btn-ghost" @click="cancelEdit">
-            <UIcon name="i-lucide-x" />
+            <UIcon name="i-heroicons-x-mark" />
             Abbrechen
           </button>
         </div>
@@ -896,13 +896,13 @@
           <!-- Basic Info -->
           <div class="form-section">
             <h3 class="form-section-title">
-              <UIcon name="i-lucide-info" />
+              <UIcon name="i-heroicons-info" />
               Grundinformationen
             </h3>
             
             <div class="form-group">
               <label for="summary">
-                <UIcon name="i-lucide-text" />
+                <UIcon name="i-heroicons-text" />
                 Titel*
               </label>
               <input
@@ -918,7 +918,7 @@
             <div class="form-row-3">
               <div class="form-group">
                 <label for="category">
-                  <UIcon name="i-lucide-tag" />
+                  <UIcon name="i-heroicons-tag" />
                   Kategorie*
                 </label>
                 <select id="category" v-model="eventForm.category" required class="select-fancy">
@@ -933,7 +933,7 @@
               
               <div class="form-group">
                 <label for="priority">
-                  <UIcon name="i-lucide-flag" />
+                  <UIcon name="i-heroicons-flag" />
                   Priorität
                 </label>
                 <select id="priority" v-model="eventForm.priority" class="select-fancy">
@@ -945,7 +945,7 @@
               
               <div class="form-group">
                 <label for="color">
-                  <UIcon name="i-lucide-palette" />
+                  <UIcon name="i-heroicons-palette" />
                   Farbe
                 </label>
                 <select id="color" v-model="eventForm.color" class="select-color">
@@ -964,7 +964,7 @@
           <!-- Date & Time -->
           <div class="form-section">
             <h3 class="form-section-title">
-              <UIcon name="i-lucide-calendar-clock" />
+              <UIcon name="i-heroicons-calendar" />
               Datum & Zeit
             </h3>
             
@@ -972,7 +972,7 @@
               <label class="checkbox-label">
                 <input type="checkbox" v-model="eventForm.isAllDay" />
                 <span class="checkbox-custom"></span>
-                <UIcon name="i-lucide-sunrise" />
+                <UIcon name="i-heroicons-sunrise" />
                 Ganztägiger Termin
               </label>
             </div>
@@ -980,7 +980,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="startDate">
-                  <UIcon name="i-lucide-calendar" />
+                  <UIcon name="i-heroicons-calendar" />
                   Startdatum*
                 </label>
                 <input
@@ -994,7 +994,7 @@
               
               <div class="form-group" v-if="!eventForm.isAllDay">
                 <label for="startTime">
-                  <UIcon name="i-lucide-clock" />
+                  <UIcon name="i-heroicons-clock" />
                   Startzeit*
                 </label>
                 <input
@@ -1010,7 +1010,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="endDate">
-                  <UIcon name="i-lucide-calendar" />
+                  <UIcon name="i-heroicons-calendar" />
                   Enddatum*
                 </label>
                 <input
@@ -1024,7 +1024,7 @@
               
               <div class="form-group" v-if="!eventForm.isAllDay">
                 <label for="endTime">
-                  <UIcon name="i-lucide-clock" />
+                  <UIcon name="i-heroicons-clock" />
                   Endzeit*
                 </label>
                 <input
@@ -1041,14 +1041,14 @@
               <label class="checkbox-label">
                 <input type="checkbox" v-model="eventForm.isRecurring" />
                 <span class="checkbox-custom"></span>
-                <UIcon name="i-lucide-repeat" />
+                <UIcon name="i-heroicons-repeat" />
                 Wiederkehrender Termin
               </label>
             </div>
             
             <div v-if="eventForm.isRecurring" class="form-group">
               <label for="recurrence">
-                <UIcon name="i-lucide-calendar-repeat" />
+                <UIcon name="i-heroicons-calendar-repeat" />
                 Wiederholung
               </label>
               <select id="recurrence" v-model="eventForm.recurrence" class="select-fancy">
@@ -1063,13 +1063,13 @@
           <!-- Location & Details -->
           <div class="form-section">
             <h3 class="form-section-title">
-              <UIcon name="i-lucide-map-pin" />
+              <UIcon name="i-heroicons-map-pin" />
               Ort & Details
             </h3>
             
             <div class="form-group">
               <label for="location">
-                <UIcon name="i-lucide-map-pin" />
+                <UIcon name="i-heroicons-map-pin" />
                 Ort / Adresse
               </label>
               <input
@@ -1083,7 +1083,7 @@
             
             <div class="form-group">
               <label for="videoLink">
-                <UIcon name="i-lucide-video" />
+                <UIcon name="i-heroicons-video" />
                 Videokonferenz-Link
               </label>
               <input
@@ -1097,7 +1097,7 @@
             
             <div class="form-group">
               <label for="description">
-                <UIcon name="i-lucide-align-left" />
+                <UIcon name="i-heroicons-align-left" />
                 Beschreibung
               </label>
               <textarea
@@ -1113,13 +1113,13 @@
           <!-- Advanced Options -->
           <div class="form-section">
             <h3 class="form-section-title">
-              <UIcon name="i-lucide-settings" />
+              <UIcon name="i-heroicons-settings" />
               Erweiterte Optionen
             </h3>
             
             <div class="form-group">
               <label for="attendees">
-                <UIcon name="i-lucide-users" />
+                <UIcon name="i-heroicons-users" />
                 Teilnehmer
               </label>
               <input
@@ -1134,58 +1134,58 @@
             
             <div class="form-group">
               <label>
-                <UIcon name="i-lucide-bell" />
+                <UIcon name="i-heroicons-bell" />
                 Erinnerungen
               </label>
               <div class="reminders-list">
                 <div v-for="(reminder, index) in eventForm.reminders" :key="index" class="reminder-item">
                   <div class="custom-dropdown">
                     <button type="button" class="dropdown-trigger" @click="toggleReminderDropdown(index)">
-                      <UIcon name="i-lucide-bell" />
+                      <UIcon name="i-heroicons-bell" />
                       <span>{{ getReminderLabel(reminder) }}</span>
-                      <UIcon name="i-lucide-chevron-down" class="dropdown-arrow" />
+                      <UIcon name="i-heroicons-chevron-down" class="dropdown-arrow" />
                     </button>
                     <div v-if="openReminderDropdown === index" class="dropdown-menu">
                       <button type="button" @click="updateReminder(index, '5')" class="dropdown-item">
-                        <UIcon name="i-lucide-clock" />
+                        <UIcon name="i-heroicons-clock" />
                         5 Minuten vorher
                       </button>
                       <button type="button" @click="updateReminder(index, '15')" class="dropdown-item">
-                        <UIcon name="i-lucide-clock" />
+                        <UIcon name="i-heroicons-clock" />
                         15 Minuten vorher
                       </button>
                       <button type="button" @click="updateReminder(index, '30')" class="dropdown-item">
-                        <UIcon name="i-lucide-clock" />
+                        <UIcon name="i-heroicons-clock" />
                         30 Minuten vorher
                       </button>
                       <button type="button" @click="updateReminder(index, '60')" class="dropdown-item">
-                        <UIcon name="i-lucide-clock-3" />
+                        <UIcon name="i-heroicons-clock-3" />
                         1 Stunde vorher
                       </button>
                       <button type="button" @click="updateReminder(index, '120')" class="dropdown-item">
-                        <UIcon name="i-lucide-clock-4" />
+                        <UIcon name="i-heroicons-clock-4" />
                         2 Stunden vorher
                       </button>
                       <button type="button" @click="updateReminder(index, '1440')" class="dropdown-item">
-                        <UIcon name="i-lucide-calendar-days" />
+                        <UIcon name="i-heroicons-calendar-days" />
                         1 Tag vorher
                       </button>
                       <button type="button" @click="updateReminder(index, '2880')" class="dropdown-item">
-                        <UIcon name="i-lucide-calendar-days" />
+                        <UIcon name="i-heroicons-calendar-days" />
                         2 Tage vorher
                       </button>
                       <button type="button" @click="updateReminder(index, '10080')" class="dropdown-item">
-                        <UIcon name="i-lucide-calendar-range" />
+                        <UIcon name="i-heroicons-calendar-range" />
                         1 Woche vorher
                       </button>
                     </div>
                   </div>
                   <button type="button" @click="removeReminder(index)" class="remove-reminder-btn">
-                    <UIcon name="i-lucide-trash-2" />
+                    <UIcon name="i-heroicons-trash" />
                   </button>
                 </div>
                 <button type="button" @click="addReminder" class="add-reminder-btn">
-                  <UIcon name="i-lucide-plus" />
+                  <UIcon name="i-heroicons-plus" />
                   <span>Erinnerung hinzufügen</span>
                 </button>
               </div>
@@ -1193,13 +1193,13 @@
             
             <div class="form-group">
               <label>
-                <UIcon name="i-lucide-eye" />
+                <UIcon name="i-heroicons-eye" />
                 Verfügbarkeit
               </label>
               <div class="custom-dropdown">
                 <button type="button" class="dropdown-trigger" @click="toggleVisibilityDropdown">
                   <span>{{ eventForm.visibility === 'busy' ? '🔴 Beschäftigt' : '🟢 Frei' }}</span>
-                  <UIcon name="i-lucide-chevron-down" class="dropdown-arrow" />
+                  <UIcon name="i-heroicons-chevron-down" class="dropdown-arrow" />
                 </button>
                 <div v-if="showVisibilityDropdown" class="dropdown-menu">
                   <button type="button" @click="setVisibility('busy')" class="dropdown-item">
@@ -1216,25 +1216,25 @@
           </div>
           
           <div v-if="formError" class="form-error">
-            <UIcon name="i-lucide-alert-circle" />
+            <UIcon name="i-heroicons-alert-circle" />
             <p>{{ formError }}</p>
           </div>
           
           <div class="form-actions sticky">
             <div class="actions-left">
               <button v-if="editingEvent" type="button" class="btn btn-danger-outline" @click="confirmDeleteEvent(editingEvent)">
-                <UIcon name="i-lucide-trash-2" />
+                <UIcon name="i-heroicons-trash" />
                 Löschen
               </button>
             </div>
             <div class="actions-right">
               <button type="button" class="btn btn-secondary" @click="resetForm">
-                <UIcon name="i-lucide-rotate-ccw" />
+                <UIcon name="i-heroicons-rotate-ccw" />
                 Zurücksetzen
               </button>
               <button type="submit" class="btn btn-primary btn-large" :disabled="isSubmitting">
-                <UIcon v-if="isSubmitting" name="i-lucide-loader-2" class="spinning" />
-                <UIcon v-else :name="editingEvent ? 'i-lucide-save' : 'i-lucide-plus'" />
+                <UIcon v-if="isSubmitting" name="i-heroicons-loader-2" class="spinning" />
+                <UIcon v-else :name="editingEvent ? 'i-heroicons-arrow-down-tray' : 'i-heroicons-plus'" />
                 {{ isSubmitting ? 'Wird gespeichert...' : (editingEvent ? 'Änderungen speichern' : 'Termin erstellen') }}
               </button>
             </div>
@@ -1247,7 +1247,7 @@
     <div v-if="deleteConfirm" class="modal-overlay" @click="deleteConfirm = null">
       <div class="modal-content" @click.stop>
         <div class="modal-header">
-          <UIcon name="i-lucide-trash-2" class="modal-icon" />
+          <UIcon name="i-heroicons-trash" class="modal-icon" />
           <h3>Termin löschen?</h3>
         </div>
         <p class="modal-text">
@@ -1258,8 +1258,8 @@
             Abbrechen
           </button>
           <button class="btn btn-danger" @click="handleDeleteEvent" :disabled="isDeleting">
-            <UIcon v-if="isDeleting" name="i-lucide-loader-2" class="spinning" />
-            <UIcon v-else name="i-lucide-trash-2" />
+            <UIcon v-if="isDeleting" name="i-heroicons-loader-2" class="spinning" />
+            <UIcon v-else name="i-heroicons-trash" />
             {{ isDeleting ? 'Wird gelöscht...' : 'Löschen' }}
           </button>
         </div>
@@ -1380,11 +1380,11 @@ const taskForm = ref({
 
 // Task Filters
 const taskFilters = [
-  { value: 'all', label: 'Alle', icon: 'i-lucide-list' },
-  { value: 'urgent', label: 'Dringend', icon: 'i-lucide-alert-circle' },
-  { value: 'high', label: 'Hoch', icon: 'i-lucide-flag' },
-  { value: 'today', label: 'Heute', icon: 'i-lucide-calendar-check' },
-  { value: 'overdue', label: 'Überfällig', icon: 'i-lucide-clock-alert' },
+  { value: 'all', label: 'Alle', icon: 'i-heroicons-list-bullet' },
+  { value: 'urgent', label: 'Dringend', icon: 'i-heroicons-alert-circle' },
+  { value: 'high', label: 'Hoch', icon: 'i-heroicons-flag' },
+  { value: 'today', label: 'Heute', icon: 'i-heroicons-calendar-check' },
+  { value: 'overdue', label: 'Überfällig', icon: 'i-heroicons-clock-alert' },
 ];
 
 // Handle Sign Out
@@ -1432,14 +1432,14 @@ const getEventCategoryClass = (event) => {
 const getEventIcon = (event) => {
   const category = getEventCategory(event);
   const iconMap = {
-    'work': 'i-lucide-briefcase',
-    'personal': 'i-lucide-user',
-    'meeting': 'i-lucide-users',
-    'birthday': 'i-lucide-cake',
-    'event': 'i-lucide-party-popper',
-    'reminder': 'i-lucide-bell'
+    'work': 'i-heroicons-briefcase',
+    'personal': 'i-heroicons-user',
+    'meeting': 'i-heroicons-users',
+    'birthday': 'i-heroicons-cake',
+    'event': 'i-heroicons-party-popper',
+    'reminder': 'i-heroicons-bell'
   };
-  return iconMap[category] || 'i-lucide-calendar';
+  return iconMap[category] || 'i-heroicons-calendar';
 };
 
 const getEventColor = (event) => {
@@ -2147,14 +2147,14 @@ const getCategoryLabel = (category) => {
 
 const getCategoryIcon = (category) => {
   const icons = {
-    personal: 'i-lucide-user',
-    work: 'i-lucide-briefcase',
-    shopping: 'i-lucide-shopping-cart',
-    health: 'i-lucide-heart-pulse',
-    finance: 'i-lucide-wallet',
-    other: 'i-lucide-folder'
+    personal: 'i-heroicons-user',
+    work: 'i-heroicons-briefcase',
+    shopping: 'i-heroicons-shopping-cart',
+    health: 'i-heroicons-heart-pulse',
+    finance: 'i-heroicons-wallet',
+    other: 'i-heroicons-folder'
   };
-  return icons[category] || 'i-lucide-folder';
+  return icons[category] || 'i-heroicons-folder';
 };
 
 // Computed for Tasks

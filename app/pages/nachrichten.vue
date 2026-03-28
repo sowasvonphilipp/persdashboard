@@ -3,7 +3,7 @@
     <div class="page-header">
       <div class="header-content">
         <NuxtLink to="/dashboard" class="back-btn">
-          <UIcon name="i-lucide-arrow-left" />
+          <UIcon name="i-heroicons-arrow-left" />
           Zurück
         </NuxtLink>
         <div>
@@ -50,7 +50,7 @@
         <div class="filter-group search-group">
           <label>Suche</label>
           <div class="search-box">
-            <UIcon name="i-lucide-search" />
+            <UIcon name="i-heroicons-magnifying-glass" />
             <input 
               v-model="searchQuery" 
               type="text" 
@@ -58,7 +58,7 @@
               @input="onSearchInput"
             />
             <button v-if="searchQuery" class="clear-btn" @click="clearSearch">
-              <UIcon name="i-lucide-x" />
+              <UIcon name="i-heroicons-x-mark" />
             </button>
           </div>
         </div>
@@ -66,13 +66,13 @@
 
       <!-- Loading State -->
       <div v-if="isLoading" class="loading-state">
-        <UIcon name="i-lucide-loader-2" class="spinning" />
+        <UIcon name="i-heroicons-loader-2" class="spinning" />
         Nachrichten werden geladen...
       </div>
 
       <!-- Error State -->
       <div v-else-if="newsError" class="error-state">
-        <UIcon name="i-lucide-alert-circle" />
+        <UIcon name="i-heroicons-alert-circle" />
         {{ newsError }}
         <button class="retry-btn" @click="fetchNews">
           Erneut versuchen
@@ -81,7 +81,7 @@
 
       <!-- Empty State -->
       <div v-else-if="articles.length === 0" class="empty-state">
-        <UIcon name="i-lucide-newspaper" />
+        <UIcon name="i-heroicons-newspaper" />
         <p>Keine Artikel gefunden</p>
         <button class="retry-btn" @click="resetFilters">
           Filter zurücksetzen
@@ -109,7 +109,7 @@
             <div class="article-footer">
               <button class="read-more" @click.stop="openArticle(article.url)">
                 Artikel lesen
-                <UIcon name="i-lucide-external-link" />
+                <UIcon name="i-heroicons-external-link" />
               </button>
             </div>
           </div>
@@ -119,7 +119,7 @@
       <!-- Load More -->
       <div v-if="articles.length > 0 && hasMore && !isLoading" class="load-more">
         <button class="load-more-btn" @click="loadMore">
-          <UIcon name="i-lucide-plus-circle" />
+          <UIcon name="i-heroicons-plus-circle" />
           Mehr laden
         </button>
       </div>
@@ -150,13 +150,13 @@ let searchTimeout = null;
 
 // Categories
 const categories = [
-  { value: 'general', label: 'Allgemein', icon: 'i-lucide-newspaper' },
-  { value: 'technology', label: 'Technologie', icon: 'i-lucide-cpu' },
-  { value: 'business', label: 'Wirtschaft', icon: 'i-lucide-trending-up' },
-  { value: 'health', label: 'Gesundheit', icon: 'i-lucide-heart-pulse' },
-  { value: 'sports', label: 'Sport', icon: 'i-lucide-trophy' },
-  { value: 'entertainment', label: 'Unterhaltung', icon: 'i-lucide-film' },
-  { value: 'science', label: 'Wissenschaft', icon: 'i-lucide-flask-conical' }
+  { value: 'general', label: 'Allgemein', icon: 'i-heroicons-newspaper' },
+  { value: 'technology', label: 'Technologie', icon: 'i-heroicons-cpu' },
+  { value: 'business', label: 'Wirtschaft', icon: 'i-heroicons-trending-up' },
+  { value: 'health', label: 'Gesundheit', icon: 'i-heroicons-heart-pulse' },
+  { value: 'sports', label: 'Sport', icon: 'i-heroicons-trophy' },
+  { value: 'entertainment', label: 'Unterhaltung', icon: 'i-heroicons-film' },
+  { value: 'science', label: 'Wissenschaft', icon: 'i-heroicons-flask-conical' }
 ];
 
 // Date ranges

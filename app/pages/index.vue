@@ -24,14 +24,14 @@
         
         <transition name="error-fade">
           <div v-if="isError" class="error-message">
-            <UIcon name="i-lucide-alert-triangle" class="error-icon" />
+            <UIcon name="i-heroicons-alert-triangle" class="error-icon" />
             <span>Falscher PIN-Code. Bitte versuche es erneut.</span>
           </div>
         </transition>
         
         <transition name="success-fade">
           <div v-if="isAuthenticated" class="success-message">
-            <UIcon name="i-lucide-check" class="success-icon" />
+            <UIcon name="i-heroicons-check" class="success-icon" />
             <span>Zugriff gewährt</span>
           </div>
         </transition>
@@ -55,11 +55,11 @@
         </div>
         <div class="pinpad-row">
           <button class="pinpad-button clear" @click="clearPin">
-            <UIcon name="i-lucide-x" />
+            <UIcon name="i-heroicons-x-mark" />
           </button>
           <button class="pinpad-button" @click="addDigit('0')">0</button>
           <button class="pinpad-button delete" @click="deleteDigit">
-            <UIcon name="i-lucide-delete" />
+            <UIcon name="i-heroicons-delete" />
           </button>
         </div>
       </div>

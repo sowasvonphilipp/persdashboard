@@ -2,18 +2,18 @@
   <div class="weather-page">
     <div class="page-header">
       <button class="back-button" @click="navigateTo('/dashboard')">
-        <UIcon name="i-lucide-arrow-left" />
+        <UIcon name="i-heroicons-arrow-left" />
         <span>Zurück</span>
       </button>
       <h1>
-        <UIcon name="i-lucide-cloud-sun" class="header-icon" />
+        <UIcon name="i-heroicons-cloud-sun" class="header-icon" />
         Wetter für {{ CITY }}
       </h1>
     </div>
 
     <!-- Error Message -->
     <div v-if="weatherError" class="error-card">
-      <UIcon name="i-lucide-alert-circle" class="error-icon" />
+      <UIcon name="i-heroicons-alert-circle" class="error-icon" />
       <div>
         <h3>Fehler</h3>
         <p>{{ weatherError }}</p>
@@ -22,7 +22,7 @@
 
     <!-- Loading State -->
     <div v-if="isLoading" class="loading-card">
-      <UIcon name="i-lucide-loader-2" class="loading-icon" />
+      <UIcon name="i-heroicons-loader-2" class="loading-icon" />
       <p>Wetterdaten werden geladen...</p>
     </div>
 
@@ -47,32 +47,32 @@
 
         <div class="current-details">
           <div class="detail-item">
-            <UIcon name="i-lucide-thermometer" />
+            <UIcon name="i-heroicons-thermometer" />
             <span class="label">Gefühlt</span>
             <span class="value">{{ currentWeather.current.feelslike_c }}°C</span>
           </div>
           <div class="detail-item">
-            <UIcon name="i-lucide-droplets" />
+            <UIcon name="i-heroicons-droplets" />
             <span class="label">Luftfeuchtigkeit</span>
             <span class="value">{{ currentWeather.current.humidity }}%</span>
           </div>
           <div class="detail-item">
-            <UIcon name="i-lucide-wind" />
+            <UIcon name="i-heroicons-wind" />
             <span class="label">Wind</span>
             <span class="value">{{ currentWeather.current.wind_kph }} km/h</span>
           </div>
           <div class="detail-item">
-            <UIcon name="i-lucide-gauge" />
+            <UIcon name="i-heroicons-gauge" />
             <span class="label">Luftdruck</span>
             <span class="value">{{ currentWeather.current.pressure_mb }} mb</span>
           </div>
           <div class="detail-item">
-            <UIcon name="i-lucide-eye" />
+            <UIcon name="i-heroicons-eye" />
             <span class="label">Sicht</span>
             <span class="value">{{ currentWeather.current.vis_km }} km</span>
           </div>
           <div class="detail-item">
-            <UIcon name="i-lucide-cloud-rain" />
+            <UIcon name="i-heroicons-cloud-rain" />
             <span class="label">Niederschlag</span>
             <span class="value">{{ currentWeather.current.precip_mm }} mm</span>
           </div>
@@ -82,7 +82,7 @@
       <!-- 3-Day Forecast -->
       <div class="forecast-section">
         <h2>
-          <UIcon name="i-lucide-calendar-days" />
+          <UIcon name="i-heroicons-calendar-days" />
           3-Tages-Vorhersage
         </h2>
         <div class="forecast-cards">
@@ -99,21 +99,21 @@
             </div>
             <div class="forecast-temp">
               <span class="temp-max">
-                <UIcon name="i-lucide-arrow-up" />
+                <UIcon name="i-heroicons-arrow-up" />
                 {{ Math.round(day.day.maxtemp_c) }}°
               </span>
               <span class="temp-min">
-                <UIcon name="i-lucide-arrow-down" />
+                <UIcon name="i-heroicons-arrow-down" />
                 {{ Math.round(day.day.mintemp_c) }}°
               </span>
             </div>
             <div class="forecast-details">
               <div class="detail-row">
-                <UIcon name="i-lucide-cloud-rain" />
+                <UIcon name="i-heroicons-cloud-rain" />
                 <span>{{ day.day.daily_chance_of_rain }}%</span>
               </div>
               <div class="detail-row">
-                <UIcon name="i-lucide-wind" />
+                <UIcon name="i-heroicons-wind" />
                 <span>{{ Math.round(day.day.maxwind_kph) }} km/h</span>
               </div>
             </div>
@@ -124,7 +124,7 @@
       <!-- Hourly Forecast for Today -->
       <div class="hourly-section">
         <h2>
-          <UIcon name="i-lucide-clock" />
+          <UIcon name="i-heroicons-clock" />
           Stündliche Vorhersage (Heute)
         </h2>
         <div class="hourly-scroll">
@@ -135,7 +135,7 @@
             </div>
             <div class="hour-temp">{{ Math.round(hour.temp_c) }}°</div>
             <div class="hour-rain">
-              <UIcon name="i-lucide-droplets" />
+              <UIcon name="i-heroicons-droplets" />
               {{ hour.chance_of_rain }}%
             </div>
           </div>
@@ -166,7 +166,7 @@ const lastUpdated = computed(() => {
 });
 
 const currentIcon = computed(() => {
-  if (!currentWeather.value) return 'i-lucide-thermometer';
+  if (!currentWeather.value) return 'i-heroicons-thermometer';
   return getWeatherIcon(
     currentWeather.value.current.condition.code,
     currentWeather.value.current.is_day === 1
@@ -181,25 +181,25 @@ const todayHourly = computed(() => {
 // Helper Functions
 const getWeatherIcon = (code, isDay) => {
   // Thunderstorm
-  if ([1087, 1273, 1276, 1279, 1282].includes(code)) return 'i-lucide-cloud-lightning';
+  if ([1087, 1273, 1276, 1279, 1282].includes(code)) return 'i-heroicons-cloud-lightning';
   // Rain
-  if ([1063, 1150, 1153, 1180, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246].includes(code)) return 'i-lucide-cloud-rain';
+  if ([1063, 1150, 1153, 1180, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246].includes(code)) return 'i-heroicons-cloud-rain';
   // Drizzle
-  if ([1072, 1168, 1171].includes(code)) return 'i-lucide-cloud-drizzle';
+  if ([1072, 1168, 1171].includes(code)) return 'i-heroicons-cloud-drizzle';
   // Snow
-  if ([1066, 1114, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258].includes(code)) return 'i-lucide-snowflake';
+  if ([1066, 1114, 1210, 1213, 1216, 1219, 1222, 1225, 1255, 1258].includes(code)) return 'i-heroicons-snowflake';
   // Sleet
-  if ([1069, 1204, 1207, 1237, 1249, 1252, 1261, 1264].includes(code)) return 'i-lucide-cloud-snow';
+  if ([1069, 1204, 1207, 1237, 1249, 1252, 1261, 1264].includes(code)) return 'i-heroicons-cloud-snow';
   // Fog/Mist
-  if ([1030, 1135, 1147].includes(code)) return 'i-lucide-cloud-fog';
+  if ([1030, 1135, 1147].includes(code)) return 'i-heroicons-cloud-fog';
   // Cloudy
-  if ([1006, 1009].includes(code)) return 'i-lucide-cloud';
+  if ([1006, 1009].includes(code)) return 'i-heroicons-cloud';
   // Partly cloudy
-  if (code === 1003) return isDay ? 'i-lucide-cloud-sun' : 'i-lucide-cloud-moon';
+  if (code === 1003) return isDay ? 'i-heroicons-cloud-sun' : 'i-heroicons-cloud-moon';
   // Clear
-  if (code === 1000) return isDay ? 'i-lucide-sun' : 'i-lucide-moon';
+  if (code === 1000) return isDay ? 'i-heroicons-sun' : 'i-heroicons-moon';
   
-  return 'i-lucide-thermometer';
+  return 'i-heroicons-thermometer';
 };
 
 const formatDate = (dateStr) => {
