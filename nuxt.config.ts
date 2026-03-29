@@ -5,6 +5,14 @@ export default defineNuxtConfig({
     '@nuxt/ui'
   ],
 
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+      ]
+    }
+  },
+
   devtools: {
     enabled: true
   },
