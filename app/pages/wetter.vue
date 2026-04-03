@@ -150,7 +150,8 @@ const config = useRuntimeConfig();
 
 // Configuration
 const WEATHER_API_KEY = config.public.weatherApiKey;
-const CITY = 'Leopoldshafen';
+const _s = localStorage.getItem('app_settings');
+const CITY = _s ? (JSON.parse(_s).weatherCity || 'Leopoldshafen') : 'Leopoldshafen';
 
 // State
 const currentWeather = ref(null);

@@ -79,7 +79,8 @@ const pin = ref('');
 const isError = ref(false);
 const isAuthenticated = ref(false);
 
-const CORRECT_PIN = '2305';
+const storedSettings = localStorage.getItem('app_settings');
+const CORRECT_PIN = storedSettings ? (JSON.parse(storedSettings).pin || '2305') : '2305';
 
 const greeting = computed(() => {
   switch (timeOfDay.value) {

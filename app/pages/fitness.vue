@@ -25,11 +25,22 @@
         <button class="add-btn sm" @click="showAddEx = true"><UIcon name="i-heroicons-plus" /> Erste Übung anlegen</button>
       </div>
 
-      <div v-else class="ex-grid">
-        <div v-for="ex in exercises" :key="ex.id" class="ex-card">
+      <template v-else>
+        <div class="ex-filter-row">
+          <button class="filter-pill" :class="{ active: !showDisabled }" @click="showDisabled = false">✅ Aktive</button>
+          <button class="filter-pill" :class="{ active: showDisabled }" @click="showDisabled = true">Alle</button>
+          <span class="ex-count-badge">{{ filteredExercises.length }} / {{ exercises.length }}</span>
+        </div>
+        <div class="ex-grid">
+        <div v-for="ex in filteredExercises" :key="ex.id" class="ex-card" :class="{ 'disabled-card': ex.enabled === false }">
           <div class="ex-header">
             <h3>{{ ex.name }}</h3>
-            <button class="ex-del-btn" @click="deleteExercise(ex.id)"><UIcon name="i-heroicons-trash" /></button>
+            <div class="ex-header-actions">
+              <button class="ex-active-btn" :class="{ on: ex.enabled !== false }" @click="toggleExEnabled(ex)" :title="ex.enabled !== false ? 'Deaktivieren' : 'Aktivieren'">
+                <span class="ex-active-dot"></span>
+              </button>
+              <button class="ex-del-btn" @click="deleteExercise(ex.id)"><UIcon name="i-heroicons-trash" /></button>
+            </div>
           </div>
 
           <!-- Expected vs Actual -->
@@ -85,6 +96,7 @@
           </div>
         </div>
       </div>
+      </template>
     </div>
 
     <!-- WEIGHT TAB -->
@@ -215,6 +227,11 @@ const showAddEx = ref(false);
 const loggingExId = ref(null);
 const viewHistoryEx = ref(null);
 const showImport = ref(false);
+const showDisabled = ref(false);
+
+const filteredExercises = computed(() =>
+  showDisabled.value ? exercises.value : exercises.value.filter(ex => ex.enabled !== false)
+);
 
 const importJson = ref('');
 const importError = ref('');
@@ -268,6 +285,11 @@ const getExStreak = (ex) => {
 };
 
 // Actions
+const toggleExEnabled = (ex) => {
+  ex.enabled = ex.enabled === false ? true : false;
+  saveEx();
+};
+
 const addExercise = () => {
   if (!newEx.value.name.trim()) return;
   exercises.value.push({
@@ -275,6 +297,7 @@ const addExercise = () => {
     name: newEx.value.name.trim(),
     goal: newEx.value.goal,
     unit: newEx.value.unit || 'kg',
+    enabled: true,
     logs: []
   });
   saveEx();
@@ -435,9 +458,19 @@ onMounted(load);
 .ex-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:1.25rem; }
 .ex-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:1.25rem; }
 .ex-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:0.75rem; }
-.ex-header h3 { margin:0; font-size:1.1rem; color:#10b981; }
+.ex-header h3 { margin:0; font-size:1.1rem; color:#10b981; flex:1; }
+.ex-header-actions { display:flex; align-items:center; gap:0.5rem; }
 .ex-del-btn { background:none; border:none; color:rgba(255,255,255,0.15); cursor:pointer; padding:4px; transition:color 0.2s; }
 .ex-del-btn:hover { color:#ff6b6b; }
+.ex-active-btn { width:28px; height:16px; border-radius:8px; background:rgba(255,255,255,0.12); border:none; cursor:pointer; position:relative; transition:background 0.2s; flex-shrink:0; }
+.ex-active-btn.on { background:#10b981; }
+.ex-active-dot { position:absolute; top:2px; left:2px; width:12px; height:12px; border-radius:50%; background:white; transition:transform 0.2s; }
+.ex-active-btn.on .ex-active-dot { transform:translateX(12px); }
+.disabled-card { opacity:0.4; }
+.ex-filter-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap; }
+.filter-pill { padding:0.35rem 0.9rem; border-radius:20px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); font-size:0.8rem; cursor:pointer; transition:all 0.2s; }
+.filter-pill.active { background:rgba(16,185,129,0.15); border-color:#10b981; color:#10b981; font-weight:600; }
+.ex-count-badge { margin-left:auto; font-size:0.75rem; color:rgba(255,255,255,0.35); }
 
 .ex-compare { display:flex; align-items:center; gap:0; margin:0.75rem 0; background:rgba(255,255,255,0.04); border-radius:10px; overflow:hidden; }
 .ex-compare-col { flex:1; padding:0.65rem 1rem; text-align:center; }

@@ -266,6 +266,7 @@
         <div class="fhub-card" @click="navigateTo('/journal')" style="--accent:#fcb69f"><div class="fhub-icon">📓</div><h4>Tagebuch</h4><p>Reflexion & Dankbarkeit</p></div>
         <div class="fhub-card" @click="navigateTo('/meditation')" style="--accent:#a8edea"><div class="fhub-icon">🧘</div><h4>Meditation</h4><p>Timer & Atemtechnik</p></div>
         <div class="fhub-card" @click="navigateTo('/nachrichten')" style="--accent:#fd79a8"><div class="fhub-icon">📰</div><h4>Nachrichten</h4><p>Aktuelle News</p></div>
+        <div class="fhub-card" @click="navigateTo('/settings')" style="--accent:#a0aec0"><div class="fhub-icon">⚙️</div><h4>Einstellungen</h4><p>App konfigurieren</p></div>
       </div>
     </div>
 
@@ -621,7 +622,8 @@ const greetingMessage = computed(() => greetingsIcon.value.message);
 
 // WeatherAPI.com configuration
 const WEATHER_API_KEY = config.public.weatherApiKey;
-const CITY = 'Leopoldshafen';
+const _s = localStorage.getItem('app_settings');
+const CITY = _s ? (JSON.parse(_s).weatherCity || 'Leopoldshafen') : 'Leopoldshafen';
 
 // NewsAPI configuration
 const NEWS_API_KEY = '1ab37bb60011434a846cb415fe0f8eef';

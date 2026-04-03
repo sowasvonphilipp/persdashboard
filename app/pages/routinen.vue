@@ -706,7 +706,9 @@ const loadRoutineData = async () => {
   try {
     const key = config.public.weatherApiKey;
     if (key) {
-      const r = await $fetch(`https://api.weatherapi.com/v1/current.json?key=${key}&q=Leopoldshafen&lang=de`);
+      const _s = localStorage.getItem('app_settings');
+      const _city = _s ? (JSON.parse(_s).weatherCity || 'Leopoldshafen') : 'Leopoldshafen';
+      const r = await $fetch(`https://api.weatherapi.com/v1/current.json?key=${key}&q=${_city}&lang=de`);
       weatherTemp.value = Math.round(r.current.temp_c);
       weatherDesc.value = r.current.condition.text;
       const c = r.current.condition.code;
