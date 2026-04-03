@@ -23,7 +23,7 @@
           </span>
         </h1>
         <div class="loading-bar">
-          <div class="loading-bar-fill"></div>
+          <div class="loading-bar-fill" :style="{ width: props.progress + '%' }"></div>
         </div>
         <p class="loading-message">{{ loadingMessage }}</p>
       </div>
@@ -60,50 +60,30 @@ const props = defineProps({
   isVisible: {
     type: Boolean,
     default: true
+  },
+  progress: {
+    type: Number,
+    default: 0
+  },
+  message: {
+    type: String,
+    default: ''
   }
 });
 
-const isLoading = ref(props.isVisible);
-const loadingMessage = ref('Wird geladen...');
-
-const messages = [
-  'Wird geladen...',
-  'Daten werden synchronisiert...',
-  'Fast fertig...',
-  'Gleich geht\'s los...'
-];
-
-let messageIndex = 0;
-let messageInterval;
+const loadingMessage = computed(() => props.message || 'Dashboard wird geladen...');
 
 watch(() => props.isVisible, (newVal) => {
-  if (!newVal) {
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 300);
-  }
-});
-
-onMounted(() => {
-  // Animate loading messages
-  messageInterval = setInterval(() => {
-    messageIndex = (messageIndex + 1) % messages.length;
-    loadingMessage.value = messages[messageIndex];
-  }, 2000);
-});
-
-onUnmounted(() => {
-  if (messageInterval) {
-    clearInterval(messageInterval);
-  }
+  // handled by parent fade-out class
 });
 
 const getParticleStyle = (index) => {
-  const randomX = Math.random() * 100;
-  const randomY = Math.random() * 100;
-  const randomDelay = Math.random() * 2;
-  const randomDuration = 2 + Math.random() * 3;
-  const randomSize = 2 + Math.random() * 4;
+  const seed = index * 7919;
+  const randomX = (seed % 100);
+  const randomY = ((seed * 3) % 100);
+  const randomDelay = (seed % 20) / 10;
+  const randomDuration = 2 + (seed % 30) / 10;
+  const randomSize = 2 + (seed % 4);
   
   return {
     left: `${randomX}%`,

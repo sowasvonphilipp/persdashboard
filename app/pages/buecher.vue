@@ -25,6 +25,39 @@
 
     <!-- TAB: READING -->
     <div v-if="tab === 'reading'" class="tab-content">
+      <!-- Motivation quote -->
+      <div class="motivation-banner">
+        <div class="motivation-quote">{{ currentQuote.text }}</div>
+        <div class="motivation-author">— {{ currentQuote.author }}</div>
+        <button class="quote-next-btn" @click="nextQuote">🔀</button>
+      </div>
+
+      <!-- Daily page goal -->
+      <div class="daily-goal-card">
+        <div class="dg-left">
+          <div class="dg-label">📅 Heutige Seiten</div>
+          <div class="dg-stats">
+            <span class="dg-today">{{ todayPagesRead }}</span>
+            <span class="dg-sep">/</span>
+            <span class="dg-goal">{{ dailyPageGoal }}</span>
+            <span class="dg-unit">Seiten</span>
+          </div>
+        </div>
+        <div class="dg-center">
+          <div class="dg-pbar-wrap">
+            <div class="dg-pbar" :style="{ width: Math.min(100, todayPagesRead / Math.max(1, dailyPageGoal) * 100) + '%' }"></div>
+          </div>
+          <div class="dg-pct">{{ Math.min(100, Math.round(todayPagesRead / Math.max(1, dailyPageGoal) * 100)) }}%</div>
+        </div>
+        <div class="dg-right">
+          <button class="dg-edit-btn" @click="showGoalEdit = !showGoalEdit">⚙️</button>
+        </div>
+      </div>
+      <div v-if="showGoalEdit" class="goal-edit-row">
+        <label>Tagesziel (Seiten):</label>
+        <input v-model.number="dailyPageGoal" type="number" min="1" max="999" class="finput sm goal-input" @change="saveDailyGoal" />
+      </div>
+
       <div v-if="booksCurrentlyReading.length === 0" class="empty"><UIcon name="i-heroicons-book-open" /><p>Du liest aktuell kein Buch</p></div>
       <div class="books-grid">
         <div v-for="book in booksCurrentlyReading" :key="book.id" class="book-card" @click="viewBook(book)">
@@ -185,6 +218,10 @@
             </div>
             
             <div class="fg" style="margin-top:1rem">
+              <label>✨ Warum lese ich dieses Buch?</label>
+              <textarea v-model="viewingBook.motivation" class="finput motivation-input" rows="2" placeholder="Was erhoffst du dir? Was motiviert dich?" @change="save"></textarea>
+            </div>
+            <div class="fg" style="margin-top:1rem">
               <label>Notizen / Rezension</label>
               <textarea v-model="viewingBook.review" class="finput" rows="4" @change="save"></textarea>
             </div>
@@ -200,6 +237,29 @@
 const books = ref([]);
 const tab = ref('reading');
 const showAdd = ref(false);
+
+// ── Motivation quotes ─────────────────────────────────────────
+const readingQuotes = [
+  { text: 'Ein Leser lebt tausend Leben, bevor er stirbt. Einer, der nie liest, lebt nur einmal.', author: 'George R.R. Martin' },
+  { text: 'Nicht alle, die wandern, sind verloren.', author: 'J.R.R. Tolkien' },
+  { text: 'Das Lesen ist das beste Lernen.', author: 'Alexander Puschkin' },
+  { text: 'Lesen ohne nachzudenken ist wie Essen ohne zu verdauen.', author: 'Edmund Burke' },
+  { text: 'Bücher sind Spiegel: Man sieht in ihnen nur, was man bereits in sich hat.', author: 'Carlos Ruiz Zafón' },
+  { text: 'Ein Buch ist ein Garten, den man in der Tasche trägt.', author: 'Arabisches Sprichwort' },
+];
+const quoteIndex = ref(0);
+const currentQuote = computed(() => readingQuotes[quoteIndex.value % readingQuotes.length]);
+const nextQuote = () => { quoteIndex.value++; };
+
+// ── Daily page goal ─────────────────────────────────────────
+const dailyPageGoal = ref(20);
+const showGoalEdit = ref(false);
+const todayStr2 = new Date().toISOString().split('T')[0];
+const todayPagesRead = computed(() => {
+  const log = JSON.parse(localStorage.getItem('reading_log') || '{}');
+  return log[todayStr2] || 0;
+});
+const saveDailyGoal = () => localStorage.setItem('reading_daily_goal', String(dailyPageGoal.value));
 
 const startingBook = ref(null);
 const startDeadline = ref('');
@@ -330,6 +390,8 @@ const deleteBook = (id) => { books.value = books.value.filter(b => b.id !== id);
 
 const save = () => { localStorage.setItem('dashboard_books', JSON.stringify(books.value)); };
 const load = () => {
+  const storedGoal = localStorage.getItem('reading_daily_goal');
+  if (storedGoal) dailyPageGoal.value = parseInt(storedGoal);
   const b = localStorage.getItem('dashboard_books');
   const oldB = localStorage.getItem('dashboard_current_book');
   
@@ -385,6 +447,31 @@ onMounted(load);
 .bp-text { font-size:0.7rem; color:rgba(255,255,255,0.4); margin-top:0.25rem; text-align:right; }
 
 .book-deadline-calc { display:flex; align-items:center; gap:0.3rem; margin-top:0.4rem; font-size:0.7rem; color:#a29bfe; font-weight:600;}
+
+/* ── Motivation & daily goal ────────────────────────────── */
+.motivation-banner { position:relative; background:linear-gradient(135deg,rgba(224,86,253,0.12),rgba(104,109,224,0.12)); border:1px solid rgba(224,86,253,0.25); border-radius:16px; padding:1.25rem 3rem 1.25rem 1.5rem; margin-bottom:1rem; }
+.motivation-quote { font-size:0.95rem; font-style:italic; color:rgba(255,255,255,0.85); line-height:1.6; margin-bottom:0.4rem; }
+.motivation-author { font-size:0.75rem; color:rgba(255,255,255,0.45); font-weight:500; }
+.quote-next-btn { position:absolute; top:0.75rem; right:0.75rem; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; cursor:pointer; width:32px; height:32px; font-size:0.9rem; display:flex; align-items:center; justify-content:center; }
+.quote-next-btn:hover { background:rgba(224,86,253,0.2); }
+
+.daily-goal-card { display:flex; align-items:center; gap:1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:1rem 1.25rem; margin-bottom:0.5rem; }
+.dg-left { min-width:120px; }
+.dg-label { font-size:0.7rem; color:rgba(255,255,255,0.4); margin-bottom:0.2rem; }
+.dg-stats { display:flex; align-items:baseline; gap:0.3rem; }
+.dg-today { font-size:1.4rem; font-weight:700; color:#e056fd; }
+.dg-sep { color:rgba(255,255,255,0.3); }
+.dg-goal { font-size:1rem; font-weight:600; color:rgba(255,255,255,0.6); }
+.dg-unit { font-size:0.7rem; color:rgba(255,255,255,0.3); }
+.dg-center { flex:1; }
+.dg-pbar-wrap { height:8px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; margin-bottom:0.3rem; }
+.dg-pbar { height:100%; background:linear-gradient(90deg,#e056fd,#686de0); border-radius:99px; transition:width 0.4s; }
+.dg-pct { font-size:0.7rem; color:rgba(255,255,255,0.4); text-align:right; }
+.dg-right { }
+.dg-edit-btn { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:white; cursor:pointer; padding:0.4rem 0.5rem; font-size:0.8rem; }
+.goal-edit-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; color:rgba(255,255,255,0.6); font-size:0.85rem; }
+.goal-input { max-width:100px !important; }
+.motivation-input { font-style:italic; color:rgba(255,255,255,0.8); }
 
 .update-btn { margin-top:auto; background:rgba(224,86,253,0.15); border:1px solid rgba(224,86,253,0.3); color:#e056fd; padding:0.4rem; border-radius:6px; font-size:0.75rem; cursor:pointer; }
 .update-btn:hover { background:rgba(224,86,253,0.25); }

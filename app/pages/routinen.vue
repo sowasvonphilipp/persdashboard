@@ -14,33 +14,48 @@
       <h1 class="page-title"><UIcon name="i-heroicons-sparkles" class="title-icon" />Tägliche Routinen</h1>
       <p class="page-subtitle">Wähle deine Routine für jetzt</p>
       <div class="routine-cards">
-        <div class="routine-card morning" :class="{ recommended: currentPeriod === 'morning' }" @click="startRoutine('morning')">
-          <div v-if="currentPeriod === 'morning'" class="rec-badge">Jetzt empfohlen</div>
+        <div class="routine-card morning" :class="{ recommended: currentPeriod === 'morning', 'done-today': isDoneToday('morning') }" @click="startRoutine('morning')">
+          <div v-if="currentPeriod === 'morning' && !isDoneToday('morning')" class="rec-badge">Jetzt empfohlen</div>
+          <div v-if="isDoneToday('morning')" class="done-badge">✅ Heute erledigt</div>
           <div class="rc-icon">🌅</div>
           <h2>Morgenroutine</h2>
-          <p>~5 Minuten</p>
+          <div class="rc-meta">
+            <span class="rc-time">⏰ 05:00 – 11:00</span>
+            <span class="rc-streak" v-if="getStreak('morning') > 0">🔥 {{ getStreak('morning') }}d Streak</span>
+          </div>
+          <div class="rc-last" v-if="getLastDone('morning')">Zuletzt: {{ getLastDone('morning') }}</div>
           <ul><li>Aufgaben & Termine</li><li>Wetter & Prioritäten</li><li>Morgen-Checklist</li><li>Motivations-Zitat</li></ul>
-          <button class="start-btn"><UIcon name="i-heroicons-play" /> Starten</button>
+          <button class="start-btn"><UIcon name="i-heroicons-play" /> {{ isDoneToday('morning') ? 'Wiederholen' : 'Starten' }}</button>
         </div>
-        <div class="routine-card mittag" :class="{ recommended: currentPeriod === 'mittag' }" @click="startRoutine('mittag')">
-          <div v-if="currentPeriod === 'mittag'" class="rec-badge">Jetzt empfohlen</div>
+        <div class="routine-card mittag" :class="{ recommended: currentPeriod === 'mittag', 'done-today': isDoneToday('mittag') }" @click="startRoutine('mittag')">
+          <div v-if="currentPeriod === 'mittag' && !isDoneToday('mittag')" class="rec-badge">Jetzt empfohlen</div>
+          <div v-if="isDoneToday('mittag')" class="done-badge">✅ Heute erledigt</div>
           <div class="rc-icon">🍲</div>
           <h2>Mittagsroutine</h2>
-          <p>~2 Minuten</p>
+          <div class="rc-meta">
+            <span class="rc-time">⏰ 11:00 – 15:00</span>
+            <span class="rc-streak" v-if="getStreak('mittag') > 0">🔥 {{ getStreak('mittag') }}d Streak</span>
+          </div>
+          <div class="rc-last" v-if="getLastDone('mittag')">Zuletzt: {{ getLastDone('mittag') }}</div>
           <ul><li>Erledigt & Offen</li><li>Aufgaben hinzufügen</li><li>Energie-Check</li></ul>
-          <button class="start-btn"><UIcon name="i-heroicons-play" /> Starten</button>
+          <button class="start-btn"><UIcon name="i-heroicons-play" /> {{ isDoneToday('mittag') ? 'Wiederholen' : 'Starten' }}</button>
         </div>
-        <div class="routine-card abend" :class="{ recommended: currentPeriod === 'abend' }" @click="startRoutine('abend')">
-          <div v-if="currentPeriod === 'abend'" class="rec-badge">Jetzt empfohlen</div>
+        <div class="routine-card abend" :class="{ recommended: currentPeriod === 'abend', 'done-today': isDoneToday('abend') }" @click="startRoutine('abend')">
+          <div v-if="currentPeriod === 'abend' && !isDoneToday('abend')" class="rec-badge">Jetzt empfohlen</div>
+          <div v-if="isDoneToday('abend')" class="done-badge">✅ Heute erledigt</div>
           <div class="rc-icon">🌙</div>
           <h2>Abendroutine</h2>
-          <p>~10 Minuten</p>
+          <div class="rc-meta">
+            <span class="rc-time">⏰ 17:00 – 23:00</span>
+            <span class="rc-streak" v-if="getStreak('abend') > 0">🔥 {{ getStreak('abend') }}d Streak</span>
+          </div>
+          <div class="rc-last" v-if="getLastDone('abend')">Zuletzt: {{ getLastDone('abend') }}</div>
           <ul><li>Tagesrückblick & Checklist</li><li>Dankbarkeit & Bewertung</li><li>Morgen planen & Termine</li><li>Aufgaben für morgen</li></ul>
-          <button class="start-btn"><UIcon name="i-heroicons-play" /> Starten</button>
+          <button class="start-btn"><UIcon name="i-heroicons-play" /> {{ isDoneToday('abend') ? 'Wiederholen' : 'Starten' }}</button>
         </div>
       </div>
-      <div class="routine-streak" v-if="routineStreak > 0">
-        <UIcon name="i-heroicons-flame" /> {{ routineStreak }} Tage Streak!
+      <div class="routine-streak" v-if="totalStreakDays > 0">
+        <UIcon name="i-heroicons-flame" /> {{ totalStreakDays }} Tage Streak! &nbsp;·&nbsp; {{ doneCountToday }}/3 heute erledigt
       </div>
     </div>
 
@@ -135,6 +150,7 @@
           </div>
 
           <!-- CHECKLIST (configurable habits) -->
+          <!-- CHECKLIST -->
           <div v-if="currentStep.type === 'checklist'" class="sd">
             <div class="checklist">
               <div v-for="item in getChecklistItems(activeRoutine)" :key="item.id" class="chk-item" :class="{ checked: isChecked(item.id) }" @click="toggleCheck(item.id)">
@@ -144,6 +160,21 @@
               </div>
             </div>
             <div class="chk-progress">{{ checkedCount }}/{{ getChecklistItems(activeRoutine).length }} erledigt</div>
+          </div>
+
+          <!-- LINKED HABITS -->
+          <div v-if="currentStep.type === 'linkedHabits'" class="sd">
+            <div v-if="linkedHabits.length === 0" class="empty">
+              <p>Keine Gewohnheiten mit Routinen verknüpft.<br><small>In Gewohnheiten → Karte → "Zur Routine hinzufügen" klicken.</small></p>
+            </div>
+            <div v-else class="checklist">
+              <div v-for="habit in linkedHabits" :key="habit.id" class="chk-item" :class="{ checked: isHabitCheckedToday(habit.id) }" @click="toggleHabitToday(habit.id)">
+                <div class="chk-box"><UIcon v-if="isHabitCheckedToday(habit.id)" name="i-heroicons-check" /></div>
+                <span class="chk-icon">{{ habit.icon }}</span>
+                <span class="chk-label">{{ habit.name }}<span v-if="habit.description" class="chk-sub"> – {{ habit.description }}</span></span>
+              </div>
+            </div>
+            <div v-if="linkedHabits.length > 0" class="chk-progress">{{ linkedHabitsChecked }}/{{ linkedHabits.length }} heute</div>
           </div>
 
           <!-- PRAYER -->
@@ -468,6 +499,7 @@ const allRoutineSteps = {
   abend: [
     {emoji:'✅',title:'Tagesrückblick',description:'Das hast du heute geschafft:',type:'completed'},
     {emoji:'📋',title:'Was ist offen?',description:'Diese Aufgaben sind noch nicht erledigt:',type:'tasks'},
+    {emoji:'🔗',title:'Gewohnheiten-Check',description:'Hake deine verknüpften Gewohnheiten ab:',type:'linkedHabits'},
     {emoji:'✅',title:'Abend-Habits',description:'Hake ab, was du heute gemacht hast:',type:'checklist'},
     {emoji:'📸',title:'Abend-Selfie',description:'Nimm dein Abend-Selfie auf:',type:'selfie'},
     {emoji:'📝',title:'Tagebuch',description:'Schreibe eine kurze Reflexion:',type:'journal'},
@@ -599,6 +631,29 @@ const loadTagesplan = () => {
   }).sort((a, b) => a.start.localeCompare(b.start));
 };
 
+// Linked habits
+const linkedHabits = ref([]);
+const linkedHabitLog = ref([]);
+const loadLinkedHabits = () => {
+  const savedHabits = JSON.parse(localStorage.getItem('habits_v2') || '[]');
+  linkedHabits.value = savedHabits.filter(h => h.inRoutine);
+  const savedLog = JSON.parse(localStorage.getItem('habit_log') || '{}');
+  linkedHabitLog.value = savedLog;
+};
+const isHabitCheckedToday = (id) => {
+  const today = new Date().toISOString().split('T')[0];
+  return (linkedHabitLog.value[id] || []).includes(today);
+};
+const toggleHabitToday = (id) => {
+  const today = new Date().toISOString().split('T')[0];
+  if (!linkedHabitLog.value[id]) linkedHabitLog.value[id] = [];
+  const idx = linkedHabitLog.value[id].indexOf(today);
+  if (idx > -1) linkedHabitLog.value[id].splice(idx, 1);
+  else linkedHabitLog.value[id].push(today);
+  localStorage.setItem('habit_log', JSON.stringify(linkedHabitLog.value));
+};
+const linkedHabitsChecked = computed(() => linkedHabits.value.filter(h => isHabitCheckedToday(h.id)).length);
+
 const startRoutine = async (type) => {
   activeRoutine.value = type;
   currentStepIndex.value = 0;
@@ -628,6 +683,7 @@ const startRoutine = async (type) => {
   await loadRoutineData();
   await loadPrayerAndFact();
   loadTagesplan();
+  loadLinkedHabits();
 };
 
 const loadRoutineData = async () => {
@@ -716,13 +772,50 @@ const finishRoutine = () => {
   activeRoutine.value = null;
 };
 
+const isDoneToday = (type) => {
+  const data = JSON.parse(localStorage.getItem('routine_data') || '{}');
+  const today = new Date().toDateString();
+  return !!(data[today]?.[type]?.completed);
+};
+
+const getStreak = (type) => {
+  const data = JSON.parse(localStorage.getItem('routine_data') || '{}');
+  let streak = 0;
+  const d = new Date();
+  while (true) {
+    if (data[d.toDateString()]?.[type]?.completed) { streak++; d.setDate(d.getDate() - 1); }
+    else break;
+  }
+  return streak;
+};
+
+const getLastDone = (type) => {
+  const data = JSON.parse(localStorage.getItem('routine_data') || '{}');
+  const today = new Date().toDateString();
+  const keys = Object.keys(data).filter(k => data[k]?.[type]?.completed && k !== today);
+  if (keys.length === 0) return null;
+  const last = keys.sort((a, b) => new Date(b) - new Date(a))[0];
+  const d = new Date(last);
+  const diff = Math.round((new Date() - d) / 86400000);
+  if (diff === 1) return 'Gestern';
+  if (diff < 7) return `vor ${diff} Tagen`;
+  return d.toLocaleDateString('de-DE', { day: 'numeric', month: 'short' });
+};
+
+const doneCountToday = computed(() => ['morning','mittag','abend'].filter(t => isDoneToday(t)).length);
+
 const updateStreak = () => {
   const data = JSON.parse(localStorage.getItem('routine_data') || '{}');
   let streak = 0;
   const d = new Date();
-  while (data[d.toDateString()]) { streak++; d.setDate(d.getDate() - 1); }
+  // count days where at least one routine was done
+  while (data[d.toDateString()] && Object.values(data[d.toDateString()]).some(v => v?.completed)) {
+    streak++; d.setDate(d.getDate() - 1);
+  }
   routineStreak.value = streak;
 };
+
+const totalStreakDays = computed(() => routineStreak.value);
 
 onMounted(async () => { loadChecklists(); loadStepConfig(); await restoreToken(); await restoreTasksToken(); updateStreak(); });
 </script>
@@ -742,8 +835,14 @@ onMounted(async () => { loadChecklists(); loadStepConfig(); await restoreToken()
 .routine-card.mittag { border-color:rgba(79,172,254,0.3); } .routine-card.mittag:hover { border-color:rgba(79,172,254,0.6); box-shadow:0 15px 50px rgba(79,172,254,0.2); }
 .routine-card.abend { border-color:rgba(162,155,254,0.3); } .routine-card.abend:hover { border-color:rgba(162,155,254,0.6); box-shadow:0 15px 50px rgba(162,155,254,0.2); }
 .routine-card.recommended { animation:pulse-border 2s infinite; }
+.routine-card.done-today { opacity:0.85; }
 @keyframes pulse-border { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
 .rec-badge { position:absolute; top:-10px; right:16px; padding:4px 12px; border-radius:20px; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:1px; background:linear-gradient(135deg,#4facfe,#00f2fe); color:white; }
+.done-badge { position:absolute; top:-10px; right:16px; padding:4px 12px; border-radius:20px; font-size:0.7rem; font-weight:600; background:rgba(16,185,129,0.25); border:1px solid rgba(16,185,129,0.4); color:#10b981; }
+.rc-meta { display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; margin:-0.25rem 0 0.25rem; }
+.rc-time { font-size:0.78rem; color:rgba(255,255,255,0.45); }
+.rc-streak { font-size:0.78rem; color:#ff6b35; font-weight:600; }
+.rc-last { font-size:0.75rem; color:rgba(255,255,255,0.35); margin-bottom:0.25rem; }
 .rc-icon { font-size:3rem; }
 .routine-card h2 { font-size:1.3rem; font-weight:600; margin:0; }
 .routine-card p { color:rgba(255,255,255,0.5); font-size:0.9rem; margin:0; }
@@ -791,6 +890,7 @@ onMounted(async () => { loadChecklists(); loadStepConfig(); await restoreToken()
 .chk-icon { font-size:1.2rem; }
 .chk-label { color:rgba(255,255,255,0.8); font-size:0.9rem; }
 .chk-item.checked .chk-label { text-decoration:line-through; color:rgba(255,255,255,0.4); }
+.chk-sub { color:rgba(255,255,255,0.35); font-size:0.78rem; }
 .chk-progress { text-align:center; margin-top:0.75rem; color:#10b981; font-weight:600; font-size:0.9rem; }
 
 /* Inputs */

@@ -31,22 +31,52 @@
             <h3>{{ ex.name }}</h3>
             <button class="ex-del-btn" @click="deleteExercise(ex.id)"><UIcon name="i-heroicons-trash" /></button>
           </div>
-          
-          <div class="ex-goal-section">
-            <span class="ex-lbl">Ziel (Goal):</span>
-            <span class="ex-val">{{ ex.goal }} {{ ex.unit || 'kg' }}</span>
+
+          <!-- Expected vs Actual -->
+          <div class="ex-compare">
+            <div class="ex-compare-col">
+              <div class="ex-compare-label">Erwartet</div>
+              <div class="ex-compare-val">{{ ex.goal }} <span class="ex-unit">{{ ex.unit || 'kg' }}</span></div>
+            </div>
+            <div class="ex-compare-divider"></div>
+            <div class="ex-compare-col actual">
+              <div class="ex-compare-label">Aktuell</div>
+              <div class="ex-compare-val" :class="ex.logs.length > 0 ? (getLatestActual(ex) >= ex.goal ? 'text-green' : 'text-yellow') : 'text-muted'">
+                {{ ex.logs.length > 0 ? getLatestActual(ex) : '–' }} <span class="ex-unit" v-if="ex.logs.length > 0">{{ ex.unit || 'kg' }}</span>
+              </div>
+            </div>
           </div>
 
-          <div class="ex-progress-bar" v-if="ex.goal && getLatestActual(ex) > 0">
-            <div class="ex-progress-fill" :style="{ width: Math.min(100, (getLatestActual(ex) / ex.goal) * 100) + '%' }"></div>
+          <!-- Progress Bar -->
+          <div class="ex-progress-wrap" v-if="ex.goal">
+            <div class="ex-progress-bar">
+              <div class="ex-progress-fill" :style="{ width: Math.min(100, (getLatestActual(ex) / ex.goal) * 100) + '%' }"></div>
+            </div>
+            <span class="ex-progress-pct">{{ ex.logs.length > 0 ? Math.round(Math.min(100, (getLatestActual(ex) / ex.goal) * 100)) : 0 }}%</span>
           </div>
 
-          <div class="ex-latest" v-if="ex.logs.length > 0">
-            <span class="ex-lbl">Aktuell (Letzter Eintrag):</span>
-            <span class="ex-val text-green">{{ getLatestActual(ex) }} {{ ex.unit || 'kg' }}</span>
+          <!-- Streak & Stats -->
+          <div class="ex-stats-row">
+            <div class="ex-stat" v-if="getExStreak(ex) > 0">
+              🔥 <strong>{{ getExStreak(ex) }}d</strong> <span>Streak</span>
+            </div>
+            <div class="ex-stat">
+              📊 <strong>{{ ex.logs.length }}</strong> <span>Einheiten</span>
+            </div>
+            <div class="ex-stat" v-if="getBestActual(ex) > 0">
+              🏆 <strong>{{ getBestActual(ex) }}</strong> <span>Best</span>
+            </div>
           </div>
-          <div class="ex-latest" v-else>
-            <span class="text-muted">Noch keine Einträge</span>
+
+          <!-- Last 7 Workouts Mini -->
+          <div class="ex-mini-history" v-if="ex.logs.length > 0">
+            <div v-for="l in ex.logs.slice().reverse().slice(0, 5)" :key="l.id" class="ex-mini-row">
+              <span class="ex-mini-date">{{ formatDateShort(l.date) }}</span>
+              <div class="ex-mini-bar-wrap">
+                <div class="ex-mini-bar" :style="{ width: Math.min(100, (l.actual / (ex.goal || 1)) * 100) + '%' }"></div>
+              </div>
+              <span class="ex-mini-val">{{ l.actual }}</span>
+            </div>
           </div>
 
           <div class="ex-actions">
@@ -212,6 +242,7 @@ const getWeightBarHeight = (w) => {
 
 // Utilities
 const formatDate = (ds) => new Date(ds).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year:'numeric' });
+const formatDateShort = (ds) => new Date(ds).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
 
 const getLatestActual = (ex) => {
   if (!ex.logs || ex.logs.length === 0) return 0;
@@ -221,6 +252,19 @@ const getLatestActual = (ex) => {
 const getBestActual = (ex) => {
   if (!ex.logs || ex.logs.length === 0) return 0;
   return Math.max(...ex.logs.map(l => l.actual));
+};
+
+const getExStreak = (ex) => {
+  if (!ex.logs || ex.logs.length === 0) return 0;
+  const dates = new Set(ex.logs.map(l => l.date));
+  let streak = 0;
+  const d = new Date();
+  while (true) {
+    const key = d.toISOString().split('T')[0];
+    if (dates.has(key)) { streak++; d.setDate(d.getDate() - 1); }
+    else break;
+  }
+  return streak;
 };
 
 // Actions
@@ -395,17 +439,39 @@ onMounted(load);
 .ex-del-btn { background:none; border:none; color:rgba(255,255,255,0.15); cursor:pointer; padding:4px; transition:color 0.2s; }
 .ex-del-btn:hover { color:#ff6b6b; }
 
+.ex-compare { display:flex; align-items:center; gap:0; margin:0.75rem 0; background:rgba(255,255,255,0.04); border-radius:10px; overflow:hidden; }
+.ex-compare-col { flex:1; padding:0.65rem 1rem; text-align:center; }
+.ex-compare-col.actual { background:rgba(16,185,129,0.05); }
+.ex-compare-divider { width:1px; background:rgba(255,255,255,0.08); align-self:stretch; }
+.ex-compare-label { font-size:0.68rem; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.2rem; }
+.ex-compare-val { font-size:1.1rem; font-weight:700; }
+.ex-unit { font-size:0.75rem; color:rgba(255,255,255,0.5); font-weight:400; }
+.text-yellow { color:#ffd93d; }
+.text-green { color:#10b981; }
+.text-red { color:#ff6b6b; }
+.text-muted { color:rgba(255,255,255,0.3); font-size:0.8rem; font-style:italic; }
+
+.ex-progress-wrap { display:flex; align-items:center; gap:0.5rem; margin:0 0 0.75rem; }
+.ex-progress-bar { flex:1; height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden; }
+.ex-progress-fill { height:100%; background:linear-gradient(90deg,#4facfe,#10b981); transition:width 0.5s; width:0%; }
+.ex-progress-pct { font-size:0.72rem; color:rgba(255,255,255,0.5); min-width:30px; text-align:right; }
+
+.ex-stats-row { display:flex; gap:0.75rem; margin-bottom:0.75rem; }
+.ex-stat { display:flex; align-items:center; gap:0.3rem; font-size:0.78rem; color:rgba(255,255,255,0.5); }
+.ex-stat strong { color:white; }
+
+.ex-mini-history { margin-bottom:0.75rem; display:flex; flex-direction:column; gap:0.25rem; }
+.ex-mini-row { display:flex; align-items:center; gap:0.5rem; font-size:0.72rem; }
+.ex-mini-date { color:rgba(255,255,255,0.35); min-width:36px; }
+.ex-mini-bar-wrap { flex:1; height:4px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; }
+.ex-mini-bar { height:100%; background:#10b981; border-radius:2px; transition:width 0.3s; }
+.ex-mini-val { color:rgba(255,255,255,0.6); min-width:28px; text-align:right; }
+
 .ex-goal-section, .ex-latest { display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:0.4rem; }
 .ex-lbl { color:rgba(255,255,255,0.5); }
 .ex-val { font-weight:600; }
-.text-green { color:#10b981; }
-.text-red { color:#ff6b6b; }
-.text-muted { color:rgba(255,255,255,0.3); font-size:0.8rem; font-style:italic;}
 
-.ex-progress-bar { height:6px; background:rgba(255,255,255,0.08); border-radius:3px; margin:0.75rem 0 1rem; overflow:hidden; }
-.ex-progress-fill { height:100%; background:linear-gradient(90deg,#4facfe,#10b981); transition:width 0.5s; width:0%; }
-
-.ex-actions { display:flex; gap:0.5rem; margin-top:1.25rem; }
+.ex-actions { display:flex; gap:0.5rem; margin-top:0.5rem; }
 .log-btn, .hist-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:0.4rem; padding:0.5rem; border-radius:8px; font-size:0.8rem; cursor:pointer; border:1px solid transparent; background:rgba(255,255,255,0.05); color:#fff; transition:all 0.2s;}
 .log-btn { border-color:rgba(16,185,129,0.3); color:#10b981; }
 .log-btn:hover { background:rgba(16,185,129,0.1); }

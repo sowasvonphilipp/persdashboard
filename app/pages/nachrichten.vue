@@ -231,19 +231,19 @@ const fetchNews = async () => {
     newsError.value = '';
     
     const fromDate = getDateRange();
-    let url = '';
+    let params = {
+      pageSize,
+      page: currentPage.value,
+    };
     
-    // Build query based on filters
     if (searchQuery.value.trim()) {
-      // Search query with category filter
-      const query = searchQuery.value.trim();
-      url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&from=${fromDate}&sortBy=publishedAt&pageSize=${pageSize}&page=${currentPage.value}&language=en&apiKey=${NEWS_API_KEY}`;
+      params.q = searchQuery.value.trim();
+      params.from = fromDate;
     } else {
-      // Category-based search
-      url = `https://newsapi.org/v2/top-headlines?country=us&category=${selectedCategory.value}&pageSize=${pageSize}&page=${currentPage.value}&apiKey=${NEWS_API_KEY}`;
+      params.category = selectedCategory.value;
     }
     
-    const response = await $fetch(url);
+    const response = await $fetch('/api/news', { params });
     
     if (response.status === 'ok' && response.articles) {
       const filtered = response.articles.filter(article => 

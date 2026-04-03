@@ -10,6 +10,7 @@
       <button :class="{ active: tab === 'selfie' }" @click="tab = 'selfie'">📸 Selfie</button>
       <button :class="{ active: tab === 'gallery' }" @click="tab = 'gallery'">🖼️ Galerie</button>
       <button :class="{ active: tab === 'stats' }" @click="tab = 'stats'">📊 Verlauf</button>
+      <button :class="{ active: tab === 'pflege' }" @click="tab = 'pflege'">🧴 Pflege</button>
     </div>
 
     <!-- SELFIE TAB -->
@@ -83,6 +84,68 @@
           <div class="fc-bar" :style="{ height: (d.avg / 10 * 100) + '%' }" :class="getFeelingColor(d.avg)"></div>
           <span class="fc-val">{{ d.avg.toFixed(1) }}</span>
           <span class="fc-date">{{ d.short }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PFLEGE (SKINCARE) TAB -->
+    <div v-if="tab === 'pflege'" class="tab-content">
+      <!-- Today compliance banner -->
+      <div class="pflege-banner">
+        <div class="pflege-banner-left">
+          <div class="pflege-pct">{{ skincareComplianceToday }}%</div>
+          <div class="pflege-pct-lbl">Heute erledigt</div>
+        </div>
+        <div class="pflege-pbar-wrap">
+          <div class="pflege-pbar" :style="{ width: skincareComplianceToday + '%' }"></div>
+        </div>
+        <div class="pflege-done-count">{{ skincareDoneCount }}/{{ skincareTotalCount }}</div>
+      </div>
+
+      <!-- Morning routine -->
+      <div class="pflege-section">
+        <h3 class="pflege-section-title">🌅 Morgen</h3>
+        <div class="pflege-list">
+          <div v-for="item in skincareItems.filter(i => i.time === 'morgen')" :key="item.id" class="pflege-item" :class="{ done: isSkincareChecked(item.id) }" @click="toggleSkincare(item.id)">
+            <div class="pflege-check" :class="{ done: isSkincareChecked(item.id) }">
+              <span v-if="isSkincareChecked(item.id)">✓</span>
+            </div>
+            <div class="pflege-item-info">
+              <div class="pflege-item-name">{{ item.emoji }} {{ item.name }}</div>
+              <div class="pflege-item-sub">🔥 {{ getSkincareStreak(item.id) }}d Streak · 7 Tage: {{ getSkincareWeek(item.id) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Evening routine -->
+      <div class="pflege-section">
+        <h3 class="pflege-section-title">🌙 Abend</h3>
+        <div class="pflege-list">
+          <div v-for="item in skincareItems.filter(i => i.time === 'abend')" :key="item.id" class="pflege-item" :class="{ done: isSkincareChecked(item.id) }" @click="toggleSkincare(item.id)">
+            <div class="pflege-check" :class="{ done: isSkincareChecked(item.id) }">
+              <span v-if="isSkincareChecked(item.id)">✓</span>
+            </div>
+            <div class="pflege-item-info">
+              <div class="pflege-item-name">{{ item.emoji }} {{ item.name }}</div>
+              <div class="pflege-item-sub">🔥 {{ getSkincareStreak(item.id) }}d Streak · 7 Tage: {{ getSkincareWeek(item.id) }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7-day grid -->
+      <div class="pflege-section">
+        <h3 class="pflege-section-title">📅 Letzte 7 Tage</h3>
+        <div class="pflege-calendar">
+          <div class="pflege-cal-header">
+            <div class="pflege-cal-item-col">Pflege</div>
+            <div v-for="d in last7Days" :key="d.key" class="pflege-cal-day" :class="{ today: d.key === todayStr }">{{ d.short }}</div>
+          </div>
+          <div v-for="item in skincareItems" :key="item.id" class="pflege-cal-row">
+            <div class="pflege-cal-item-col">{{ item.emoji }} {{ item.name }}</div>
+            <div v-for="d in last7Days" :key="d.key" class="pflege-cal-cell" :class="{ done: isSkincareCheckedDate(item.id, d.key), today: d.key === todayStr }">{{ isSkincareCheckedDate(item.id, d.key) ? '✓' : '·' }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -161,12 +224,12 @@ const handleFile = (e) => {
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      const maxSize = 400;
+      const maxSize = 900;
       let w = img.width, h = img.height;
       if (w > h) { h = (h / w) * maxSize; w = maxSize; } else { w = (w / h) * maxSize; h = maxSize; }
       canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      previewUrl.value = canvas.toDataURL('image/webp', 0.6);
+      previewUrl.value = canvas.toDataURL('image/jpeg', 0.88);
     };
     img.src = ev.target.result;
   };
@@ -184,7 +247,70 @@ const deleteSelfie = (id) => { selfies.value = selfies.value.filter(s => s.id !=
 
 const save = () => localStorage.setItem('glowup_selfies', JSON.stringify(selfies.value));
 const load = () => { const s = localStorage.getItem('glowup_selfies'); if (s) selfies.value = JSON.parse(s); };
-onMounted(() => { load(); const h = new Date().getHours(); selfieTime.value = h < 11 ? 'morgen' : h < 16 ? 'mittag' : 'abend'; });
+
+// ── Skincare tracker ──────────────────────────────────────────
+const skincareItems = [
+  { id: 'morgen-reinigung', name: 'Reinigung', emoji: '🫧', time: 'morgen' },
+  { id: 'morgen-creme',     name: 'Gesichtscreme', emoji: '🧴', time: 'morgen' },
+  { id: 'morgen-sonnen',   name: 'Sonnenschutz', emoji: '☀️', time: 'morgen' },
+  { id: 'morgen-lip',      name: 'Lip Balm', emoji: '💋', time: 'morgen' },
+  { id: 'abend-reinigung', name: 'Reinigung', emoji: '🫧', time: 'abend' },
+  { id: 'abend-creme',     name: 'Abendcreme', emoji: '🧴', time: 'abend' },
+  { id: 'abend-augen',     name: 'Augencreme', emoji: '👁️', time: 'abend' },
+  { id: 'abend-koerper',   name: 'Körpercreme', emoji: '🪷', time: 'abend' },
+];
+
+const skincareLog = ref({});  // { [dateKey]: { [itemId]: true } }
+
+const loadSkincare = () => {
+  const s = localStorage.getItem('glowup_skincare');
+  if (s) skincareLog.value = JSON.parse(s);
+};
+const saveSkincare = () => localStorage.setItem('glowup_skincare', JSON.stringify(skincareLog.value));
+
+const isSkincareChecked = (id) => !!(skincareLog.value[todayStr.value]?.[id]);
+const isSkincareCheckedDate = (id, date) => !!(skincareLog.value[date]?.[id]);
+
+const toggleSkincare = (id) => {
+  if (!skincareLog.value[todayStr.value]) skincareLog.value[todayStr.value] = {};
+  skincareLog.value[todayStr.value][id] = !skincareLog.value[todayStr.value][id];
+  saveSkincare();
+};
+
+const skincareTotalCount = skincareItems.length;
+const skincareDoneCount = computed(() => skincareItems.filter(i => isSkincareChecked(i.id)).length);
+const skincareComplianceToday = computed(() => Math.round((skincareDoneCount.value / skincareTotalCount) * 100));
+
+const getSkincareStreak = (id) => {
+  let streak = 0;
+  const d = new Date();
+  while (true) {
+    const key = d.toISOString().split('T')[0];
+    if (skincareLog.value[key]?.[id]) { streak++; d.setDate(d.getDate() - 1); }
+    else break;
+  }
+  return streak;
+};
+
+const getSkincareWeek = (id) => {
+  let dots = '';
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0];
+    dots += skincareLog.value[key]?.[id] ? '●' : '○';
+  }
+  return dots;
+};
+
+const last7Days = computed(() => {
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(); d.setDate(d.getDate() - (6 - i));
+    const key = d.toISOString().split('T')[0];
+    return { key, short: `${d.getDate()}.${d.getMonth() + 1}` };
+  });
+});
+
+onMounted(() => { load(); loadSkincare(); const h = new Date().getHours(); selfieTime.value = h < 11 ? 'morgen' : h < 16 ? 'mittag' : 'abend'; });
 </script>
 
 <style scoped>
@@ -276,9 +402,41 @@ onMounted(() => { load(); const h = new Date().getHours(); selfieTime.value = h 
 .btn-primary { padding:0.7rem 1.3rem; border-radius:10px; background:linear-gradient(135deg,#ff9ff3,#f368e0); color:white; font-weight:600; cursor:pointer; border:none; }
 .btn-danger { display:flex; align-items:center; gap:0.4rem; padding:0.7rem 1.3rem; border-radius:10px; background:rgba(255,107,107,0.15); border:1px solid rgba(255,107,107,0.3); color:#ff6b6b; cursor:pointer; }
 
+/* ── Pflege / Skincare ─────────────────────────────── */
+.pflege-banner { display:flex; align-items:center; gap:1rem; background:rgba(255,159,243,0.08); border:1px solid rgba(255,159,243,0.2); border-radius:16px; padding:1.2rem 1.5rem; margin-bottom:1.5rem; }
+.pflege-banner-left { min-width:64px; text-align:center; }
+.pflege-pct { font-size:1.8rem; font-weight:700; color:#ff9ff3; line-height:1; }
+.pflege-pct-lbl { font-size:0.7rem; color:rgba(255,255,255,0.4); }
+.pflege-pbar-wrap { flex:1; height:8px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; }
+.pflege-pbar { height:100%; background:linear-gradient(90deg,#ff9ff3,#f368e0); border-radius:99px; transition:width 0.4s; }
+.pflege-done-count { font-size:0.95rem; font-weight:600; color:rgba(255,255,255,0.7); }
+
+.pflege-section { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:1.25rem; margin-bottom:1rem; }
+.pflege-section-title { margin:0 0 1rem; font-size:1rem; font-weight:600; }
+.pflege-list { display:flex; flex-direction:column; gap:0.6rem; }
+.pflege-item { display:flex; align-items:center; gap:1rem; padding:0.9rem 1rem; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); cursor:pointer; transition:all 0.2s; }
+.pflege-item:hover { background:rgba(255,255,255,0.07); }
+.pflege-item.done { background:rgba(255,159,243,0.08); border-color:rgba(255,159,243,0.25); }
+.pflege-check { width:28px; height:28px; border-radius:50%; border:2px solid rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:600; flex-shrink:0; transition:all 0.2s; }
+.pflege-check.done { border-color:#ff9ff3; background:#ff9ff3; color:#1a1a2e; }
+.pflege-item-name { font-size:0.95rem; font-weight:500; margin-bottom:0.25rem; }
+.pflege-item-sub { font-size:0.72rem; color:rgba(255,255,255,0.4); letter-spacing:0.02em; }
+
+.pflege-calendar { overflow-x:auto; }
+.pflege-cal-header, .pflege-cal-row { display:grid; grid-template-columns:140px repeat(7, 1fr); gap:0; }
+.pflege-cal-header { margin-bottom:0.4rem; }
+.pflege-cal-item-col { font-size:0.75rem; color:rgba(255,255,255,0.5); padding:0.3rem 0.4rem; }
+.pflege-cal-day { font-size:0.72rem; color:rgba(255,255,255,0.4); text-align:center; padding:0.3rem 0.1rem; }
+.pflege-cal-day.today { color:#ff9ff3; font-weight:700; }
+.pflege-cal-row { margin-bottom:4px; }
+.pflege-cal-cell { font-size:0.75rem; text-align:center; padding:0.4rem 0.1rem; border-radius:6px; color:rgba(255,255,255,0.2); }
+.pflege-cal-cell.done { color:#ff9ff3; font-weight:700; }
+.pflege-cal-cell.today { background:rgba(255,159,243,0.06); }
+
 @media (max-width:768px) {
   .stats-grid { grid-template-columns:repeat(2,1fr); }
   .gallery-row { grid-template-columns:repeat(3,1fr); }
   .page-title { font-size:1.6rem; }
+  .pflege-cal-header, .pflege-cal-row { grid-template-columns:100px repeat(7,1fr); }
 }
 </style>

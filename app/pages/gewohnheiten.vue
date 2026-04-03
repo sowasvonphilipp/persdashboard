@@ -76,6 +76,14 @@
           </div>
         </div>
 
+        <!-- In Routine Toggle -->
+        <div class="routine-link-row">
+          <button class="routine-link-btn" :class="{ linked: habit.inRoutine }" @click.stop="toggleRoutineLink(habit)" :title="habit.inRoutine ? 'Aus Routine entfernen' : 'In Routine anzeigen'">
+            <span>{{ habit.inRoutine ? '🔗' : '➕' }}</span>
+            {{ habit.inRoutine ? 'In Routine' : 'Zur Routine hinzufügen' }}
+          </button>
+        </div>
+
         <!-- Streak & Stats -->
         <div class="habit-stats">
           <div class="streak" :class="{ active: getStreak(habit.id) > 0 }">
@@ -133,6 +141,14 @@
             </div>
           </div>
 
+          <div class="form-group">
+            <label>In Routine anzeigen</label>
+            <button class="routine-toggle-btn" :class="{ active: newHabit.inRoutine }" @click="newHabit.inRoutine = !newHabit.inRoutine">
+              {{ newHabit.inRoutine ? '🔗 Ja, in Routine anzeigen' : '➕ Zur Routine hinzufügen' }}
+            </button>
+            <p class="field-hint">Wenn aktiv, erscheint diese Gewohnheit als Schritt in deinen Routinen.</p>
+          </div>
+
           <!-- Templates -->
           <div class="templates-section">
             <label>Vorlagen</label>
@@ -179,7 +195,7 @@ const habitTemplates = [
   { name: 'Kein Handy', icon: '📵', description: '1h ohne Handy', category: 'productivity', color: '#ff6b6b' },
 ];
 
-const newHabit = ref({ name: '', description: '', category: 'health', icon: '💪', color: '#4facfe' });
+const newHabit = ref({ name: '', description: '', category: 'health', icon: '💪', color: '#4facfe', inRoutine: false });
 
 const filteredHabits = computed(() => {
   if (activeCategory.value === 'all') return habits.value;
@@ -261,13 +277,18 @@ const addHabit = () => {
   habitLog.value[habits.value[habits.value.length - 1].id] = [];
   saveData();
   showAddHabit.value = false;
-  newHabit.value = { name: '', description: '', category: 'health', icon: '💪', color: '#4facfe' };
+  newHabit.value = { name: '', description: '', category: 'health', icon: '💪', color: '#4facfe', inRoutine: false };
 };
 
 const deleteHabit = (id) => {
   if (!confirm('Gewohnheit löschen?')) return;
   habits.value = habits.value.filter(h => h.id !== id);
   delete habitLog.value[id];
+  saveData();
+};
+
+const toggleRoutineLink = (habit) => {
+  habit.inRoutine = !habit.inRoutine;
   saveData();
 };
 
@@ -320,6 +341,13 @@ onMounted(loadData);
 .habit-desc { margin: 0.15rem 0 0; color: rgba(255,255,255,0.4); font-size: 0.8rem; }
 .delete-btn { background: none; border: none; color: rgba(255,255,255,0.2); cursor: pointer; padding: 0.25rem; transition: all 0.2s; }
 .delete-btn:hover { color: #ff6b6b; }
+.routine-link-row { margin: 0.5rem 0 0.75rem; }
+.routine-link-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.75rem; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.5); cursor: pointer; font-size: 0.78rem; transition: all 0.2s; }
+.routine-link-btn:hover { background: rgba(255,255,255,0.08); color: white; }
+.routine-link-btn.linked { background: rgba(162,155,254,0.15); border-color: rgba(162,155,254,0.4); color: #a29bfe; }
+.routine-toggle-btn { display: block; width: 100%; padding: 0.6rem 1rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.6); cursor: pointer; font-size: 0.88rem; text-align: left; transition: all 0.2s; }
+.routine-toggle-btn.active { background: rgba(162,155,254,0.15); border-color: rgba(162,155,254,0.4); color: #a29bfe; }
+.field-hint { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin: 0.35rem 0 0; }
 
 .week-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.4rem; margin-bottom: 1rem; }
 .day-cell { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; padding: 0.5rem 0.25rem; background: rgba(255,255,255,0.03); border-radius: 10px; cursor: pointer; transition: all 0.2s; position: relative; }

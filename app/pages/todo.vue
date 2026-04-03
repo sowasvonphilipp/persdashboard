@@ -46,13 +46,26 @@
       <p v-if="currentListObj && currentListObj.startDate" class="page-subtitle">{{ formatDate(currentListObj.startDate) }} bis {{ formatDate(currentListObj.endDate) }}</p>
       <p v-else class="page-subtitle">Übersicht deiner Aufgaben</p>
 
-      <!-- Filters -->
-      <div class="filters">
+      <!-- Progress summary -->
+      <div class="todo-progress-row">
+        <div class="tp-left">
+          <span class="tp-done">{{ viewDoneCount }}</span>
+          <span class="tp-sep">/</span>
+          <span class="tp-total">{{ viewTotalCount }}</span>
+          <span class="tp-unit">erledigt</span>
+        </div>
+        <div class="tp-bar-wrap">
+          <div class="tp-bar" :style="{ width: viewProgressPct + '%' }"></div>
+        </div>
+        <div class="tp-pct">{{ viewProgressPct }}%</div>
+      </div>      <div class="filters">
         <div class="filter-group">
           <button class="filter-btn" :class="{ active: filterPrio === 'all' }" @click="filterPrio = 'all'">Alle Prio</button>
           <button class="filter-btn prio-high" :class="{ active: filterPrio === 'high' }" @click="filterPrio = 'high'">🔴 Hoch</button>
           <button class="filter-btn prio-mid" :class="{ active: filterPrio === 'medium' }" @click="filterPrio = 'medium'">🟡 Mittel</button>
           <button class="filter-btn prio-low" :class="{ active: filterPrio === 'low' }" @click="filterPrio = 'low'">🟢 Niedrig</button>
+          <button class="filter-btn filter-today" :class="{ active: filterToday }" @click="filterToday = !filterToday">📅 Heute</button>
+          <button class="filter-btn filter-overdue" :class="{ active: filterOverdue }" @click="filterOverdue = !filterOverdue">⚠️ Überfällig</button>
         </div>
         <div class="view-toggle">
           <button :class="{ active: viewMode === 'list' }" @click="viewMode = 'list'"><UIcon name="i-heroicons-list-bullet" /> Liste</button>
@@ -204,6 +217,8 @@ const rawTodos = ref([]);
 const activeListId = ref(null); // null = Lists View, 'all' = All Tasks, 'id' = Specific List
 const viewMode = ref('list');
 const filterPrio = ref('all');
+const filterToday = ref(false);
+const filterOverdue = ref(false);
 
 const showAddList = ref(false);
 const showAddTodo = ref(false);
@@ -249,6 +264,12 @@ const filteredViewTodos = computed(() => {
   if (filterPrio.value !== 'all') {
     list = list.filter(t => t.priority === filterPrio.value);
   }
+  if (filterToday.value) {
+    list = list.filter(t => t.dueDate === todayStr.value);
+  }
+  if (filterOverdue.value) {
+    list = list.filter(t => t.dueDate < todayStr.value && !t.done);
+  }
   return list;
 });
 
@@ -257,6 +278,18 @@ const overdueTodosList = computed(() => activeViewTodos.value.filter(t => t.dueD
 const todayTodosList = computed(() => activeViewTodos.value.filter(t => t.dueDate === todayStr.value).sort((a, b) => a.done - b.done));
 const upcomingTodosList = computed(() => activeViewTodos.value.filter(t => t.dueDate > todayStr.value).sort((a,b) => a.dueDate.localeCompare(b.dueDate)));
 const recentlyDoneList = computed(() => filteredViewTodos.value.filter(t => t.done).slice(0, 10));
+
+const viewTotalCount = computed(() => {
+  let list = rawTodos.value;
+  if (activeListId.value !== 'all') list = list.filter(t => t.listId === activeListId.value);
+  return list.length;
+});
+const viewDoneCount = computed(() => {
+  let list = rawTodos.value;
+  if (activeListId.value !== 'all') list = list.filter(t => t.listId === activeListId.value);
+  return list.filter(t => t.done).length;
+});
+const viewProgressPct = computed(() => viewTotalCount.value === 0 ? 0 : Math.round(viewDoneCount.value / viewTotalCount.value * 100));
 
 const formatDue = (d) => {
   const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -393,6 +426,20 @@ onMounted(loadAndMigrate);
 
 /* FILTERS */
 .filters { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem; }
+
+.todo-progress-row { display:flex; align-items:center; gap:1rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.85rem 1.25rem; margin-bottom:1.25rem; }
+.tp-left { display:flex; align-items:baseline; gap:0.25rem; min-width:100px; }
+.tp-done { font-size:1.3rem; font-weight:700; color:#a29bfe; }
+.tp-sep { color:rgba(255,255,255,0.3); }
+.tp-total { font-size:1rem; font-weight:600; color:rgba(255,255,255,0.5); }
+.tp-unit { font-size:0.7rem; color:rgba(255,255,255,0.3); margin-left:0.2rem; }
+.tp-bar-wrap { flex:1; height:8px; background:rgba(255,255,255,0.08); border-radius:99px; overflow:hidden; }
+.tp-bar { height:100%; background:linear-gradient(90deg,#a29bfe,#6c5ce7); border-radius:99px; transition:width 0.4s; }
+.tp-pct { font-size:0.8rem; font-weight:600; color:rgba(255,255,255,0.5); min-width:36px; text-align:right; }
+.filter-today { border-color:rgba(162,155,254,0.3) !important; }
+.filter-today.active { background:rgba(162,155,254,0.15) !important; border-color:#a29bfe !important; color:#a29bfe !important; }
+.filter-overdue { border-color:rgba(255,107,107,0.3) !important; }
+.filter-overdue.active { background:rgba(255,107,107,0.15) !important; border-color:#ff6b6b !important; color:#ff6b6b !important; }
 .filter-group { display:flex; gap:0.4rem; flex-wrap:wrap; }
 .filter-btn { padding:0.4rem 0.8rem; border-radius:20px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.6); cursor:pointer; font-size:0.8rem; transition:all 0.2s; }
 .filter-btn.active { background:rgba(79,172,254,0.15); border-color:#4facfe; color:#4facfe; }

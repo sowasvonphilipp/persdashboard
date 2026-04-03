@@ -127,36 +127,6 @@
       </div>
     </div>
 
-    <!-- Quick Navigation to New Features -->
-    <div class="feature-nav-section">
-      <div class="feature-nav-grid">
-        <div class="feature-nav-card routine-nav" @click="navigateTo('/routinen')">
-          <div class="fnav-icon">🌅</div>
-          <div class="fnav-content">
-            <h3>Routinen</h3>
-            <p>Morgen · Mittag · Abend</p>
-          </div>
-          <UIcon name="i-heroicons-arrow-right" class="fnav-arrow" />
-        </div>
-        <div class="feature-nav-card habits-nav" @click="navigateTo('/gewohnheiten')">
-          <div class="fnav-icon">🎯</div>
-          <div class="fnav-content">
-            <h3>Gewohnheiten</h3>
-            <p>Habits & Streaks tracken</p>
-          </div>
-          <UIcon name="i-heroicons-arrow-right" class="fnav-arrow" />
-        </div>
-        <div class="feature-nav-card grades-nav" @click="navigateTo('/noten')">
-          <div class="fnav-icon">📐</div>
-          <div class="fnav-content">
-            <h3>Noten</h3>
-            <p>Fächer & Durchschnitt</p>
-          </div>
-          <UIcon name="i-heroicons-arrow-right" class="fnav-arrow" />
-        </div>
-      </div>
-    </div>
-
     <!-- News Section -->
     <div class="news-section">
       <div class="section-header">
@@ -251,185 +221,23 @@
       </div>
     </div>
 
-    <!-- Finance/Crypto Dashboard -->
-    <div class="finance-section">
-      <div class="section-header">
-        <h2>
-          <UIcon name="i-heroicons-trending-up" class="section-icon" />
-          Finanzen & Crypto
-        </h2>
-        <button @click="refreshCrypto" class="refresh-btn">
-          <UIcon name="i-heroicons-refresh-cw" :class="{ 'spinning': isLoadingCrypto }" />
-        </button>
+    <!-- Quick Link Cards: Journal & Meditation -->
+    <div class="quick-links-row">
+      <div class="quick-link-card journal-link" @click="navigateTo('/journal')">
+        <div class="ql-icon">📓</div>
+        <div class="ql-content">
+          <h3>Tagebuch</h3>
+          <p>Reflexion & Dankbarkeit</p>
+        </div>
+        <UIcon name="i-heroicons-arrow-right" class="ql-arrow" />
       </div>
-
-      <div v-if="cryptoError" class="crypto-error">
-        <UIcon name="i-heroicons-alert-circle" />
-        <p>{{ cryptoError }}</p>
-      </div>
-
-      <div v-else-if="isLoadingCrypto" class="crypto-loading">
-        <UIcon name="i-heroicons-loader-2" class="loading-spinner" />
-        <span>Lade Kursdaten...</span>
-      </div>
-
-      <div v-else class="crypto-grid">
-        <div 
-          v-for="coin in cryptoData" 
-          :key="coin.id" 
-          class="crypto-card"
-          :class="{ 'positive': coin.price_change_percentage_24h > 0, 'negative': coin.price_change_percentage_24h < 0 }"
-        >
-          <div class="crypto-header">
-            <img :src="coin.image" :alt="coin.name" class="crypto-icon" />
-            <div class="crypto-info">
-              <h4>{{ coin.name }}</h4>
-              <span class="crypto-symbol">{{ coin.symbol.toUpperCase() }}</span>
-            </div>
-          </div>
-          <div class="crypto-price">{{ formatCurrency(coin.current_price) }}</div>
-          <div class="crypto-change" :class="{ 'positive': coin.price_change_percentage_24h > 0, 'negative': coin.price_change_percentage_24h < 0 }">
-            <UIcon :name="coin.price_change_percentage_24h > 0 ? 'i-heroicons-trending-up' : 'i-heroicons-trending-down'" />
-            <span>{{ coin.price_change_percentage_24h.toFixed(2) }}%</span>
-          </div>
-          <div class="crypto-market-cap">
-            <span>Market Cap:</span>
-            <span>{{ formatMarketCap(coin.market_cap) }}</span>
-          </div>
+      <div class="quick-link-card meditation-link" @click="navigateTo('/meditation')">
+        <div class="ql-icon">🧘</div>
+        <div class="ql-content">
+          <h3>Meditation</h3>
+          <p>Timer & Atemübungen</p>
         </div>
-      </div>
-    </div>
-
-    <!-- Daily Tagebuch (Journal) -->
-    <div class="journal-section">
-      <div class="section-header">
-        <h2>
-          <UIcon name="i-heroicons-book-open" class="section-icon" />
-          Tägliches Tagebuch
-        </h2>
-        <button @click="saveTodayEntry" class="save-journal-btn">
-          <UIcon name="i-heroicons-arrow-down-tray" />
-          Speichern
-        </button>
-      </div>
-
-      <div class="journal-card">
-        <div class="journal-date">
-          <UIcon name="i-heroicons-calendar" />
-          <span>{{ formatJournalDate(new Date()) }}</span>
-        </div>
-        <textarea 
-          v-model="todayJournalEntry" 
-          placeholder="Wie war dein Tag? Was hast du erlebt? Wofür bist du dankbar?"
-          class="journal-textarea"
-          rows="10"
-        ></textarea>
-        <div class="journal-stats">
-          <span>{{ journalWordCount }} Wörter</span>
-          <span v-if="lastSaved" class="last-saved">Zuletzt gespeichert: {{ lastSaved }}</span>
-        </div>
-      </div>
-
-      <div class="journal-history">
-        <h4>Letzte Einträge</h4>
-        <div v-if="journalEntries.length === 0" class="journal-empty">
-          <UIcon name="i-heroicons-file-text" />
-          <p>Noch keine Einträge vorhanden</p>
-        </div>
-        <div v-else class="journal-entries">
-          <div 
-            v-for="entry in journalEntries.slice(0, 5)" 
-            :key="entry.date"
-            class="journal-entry-card"
-            @click="viewEntry(entry)"
-          >
-            <div class="entry-date">{{ formatJournalDate(new Date(entry.date)) }}</div>
-            <p class="entry-preview">{{ getPreview(entry.content) }}</p>
-            <span class="entry-words">{{ countWords(entry.content) }} Wörter</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Meditation Timer -->
-    <div class="meditation-section">
-      <div class="section-header">
-        <h2>
-          <UIcon name="i-heroicons-flower" class="section-icon" />
-          5 Minuten Meditation
-        </h2>
-      </div>
-
-      <div class="meditation-card">
-        <div class="meditation-circle">
-          <svg viewBox="0 0 200 200">
-            <circle cx="100" cy="100" r="90" class="meditation-bg" />
-            <circle 
-              cx="100" 
-              cy="100" 
-              r="90" 
-              class="meditation-progress"
-              :style="{ strokeDashoffset: meditationProgress }"
-            />
-          </svg>
-          <div class="meditation-time">{{ meditationDisplay }}</div>
-        </div>
-
-        <div class="meditation-status">
-          <p v-if="!meditationRunning && meditationTime === 300">Bereit für deine Meditation?</p>
-          <p v-else-if="meditationRunning">Atme tief ein und aus...</p>
-          <p v-else-if="meditationTime === 0">Meditation beendet! 🙏</p>
-        </div>
-
-        <div class="meditation-controls">
-          <button @click="startMeditation" v-if="!meditationRunning" class="meditation-btn start">
-            <UIcon name="i-heroicons-play" />
-            {{ meditationTime === 300 ? 'Start' : 'Fortsetzen' }}
-          </button>
-          <button @click="pauseMeditation" v-if="meditationRunning" class="meditation-btn pause">
-            <UIcon name="i-heroicons-pause" />
-            Pause
-          </button>
-          <button @click="resetMeditation" class="meditation-btn reset">
-            <UIcon name="i-heroicons-rotate-ccw" />
-            Reset
-          </button>
-        </div>
-
-        <div class="meditation-stats">
-          <div class="stat-item">
-            <UIcon name="i-heroicons-check-circle" />
-            <span>{{ meditationSessions }} Sessions heute</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- (Removed old book reader widget) -->
-
-    <!-- View Journal Entry Modal -->
-    <div v-if="viewingEntry" class="modal-overlay" @click="viewingEntry = null">
-      <div class="modal-content" @click.stop>
-        <div class="modal-header">
-          <div class="modal-title">
-            <UIcon name="i-heroicons-book-open" class="modal-icon" />
-            <h3>{{ formatJournalDate(new Date(viewingEntry.date)) }}</h3>
-          </div>
-          <button class="modal-close" @click="viewingEntry = null">
-            <UIcon name="i-heroicons-x-mark" />
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="journal-viewer">
-            <p class="journal-content">{{ viewingEntry.content }}</p>
-            <div class="journal-meta">
-              <span>{{ countWords(viewingEntry.content) }} Wörter</span>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn-primary" @click="viewingEntry = null">Schließen</button>
-        </div>
+        <UIcon name="i-heroicons-arrow-right" class="ql-arrow" />
       </div>
     </div>
 
@@ -455,7 +263,9 @@
         <div class="fhub-card" @click="navigateTo('/buecher')" style="--accent:#e056fd"><div class="fhub-icon">📖</div><h4>Bücher</h4><p>Lesen & Tracker</p></div>
         <div class="fhub-card" @click="navigateTo('/routinen')" style="--accent:#a29bfe"><div class="fhub-icon">🌅</div><h4>Routinen</h4><p>Morgen · Mittag · Abend</p></div>
         <div class="fhub-card" @click="navigateTo('/gewohnheiten')" style="--accent:#54a0ff"><div class="fhub-icon">🎯</div><h4>Gewohnheiten</h4><p>Habits & Streaks</p></div>
-        <div class="fhub-card" @click="navigateTo('/noten')" style="--accent:#ff6b6b"><div class="fhub-icon">📐</div><h4>Noten</h4><p>Fächer & Schnitt</p></div>
+        <div class="fhub-card" @click="navigateTo('/journal')" style="--accent:#fcb69f"><div class="fhub-icon">📓</div><h4>Tagebuch</h4><p>Reflexion & Dankbarkeit</p></div>
+        <div class="fhub-card" @click="navigateTo('/meditation')" style="--accent:#a8edea"><div class="fhub-icon">🧘</div><h4>Meditation</h4><p>Timer & Atemtechnik</p></div>
+        <div class="fhub-card" @click="navigateTo('/nachrichten')" style="--accent:#fd79a8"><div class="fhub-icon">📰</div><h4>Nachrichten</h4><p>Aktuelle News</p></div>
       </div>
     </div>
 
@@ -1629,30 +1439,16 @@ const resetPomodoro = () => {
 
 // Removed - merged into main onMounted below
 
-// Fetch news articles
+// Fetch news articles via server proxy
 const fetchNews = async () => {
   try {
     isLoadingNews.value = true;
     newsError.value = '';
     
-    // Try multiple endpoints for better results
-    let response;
-    try {
-      // Try top headlines first (US for English news)
-      response = await $fetch(
-        `https://newsapi.org/v2/top-headlines?country=us&category=general&pageSize=10&apiKey=${NEWS_API_KEY}`
-      );
-    } catch (err) {
-      // Fallback to everything endpoint with general query
-      console.log('Top headlines failed, trying everything endpoint:', err);
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const fromDate = yesterday.toISOString().split('T')[0];
-      
-      response = await $fetch(
-        `https://newsapi.org/v2/everything?q=world OR breaking OR news&from=${fromDate}&sortBy=publishedAt&pageSize=10&apiKey=${NEWS_API_KEY}`
-      );
-    }
+    // Use server-side proxy to avoid CORS issues
+    const response = await $fetch('/api/news', {
+      params: { category: 'general', pageSize: 6, page: 1 }
+    });
     
     if (response.status === 'ok' && response.articles) {
       const filtered = response.articles.filter(article => 
@@ -1860,13 +1656,7 @@ onMounted(async () => {
   fetchNews();
   setInterval(fetchNews, 1800000); // 30 minutes
   
-  // Fetch crypto
-  fetchCrypto();
-  setInterval(fetchCrypto, 120000); // 2 minutes
-  
   // Initialize local storage features
-  loadJournalEntries();
-  loadMeditationSessions();
   // loadBookData();
   loadBirthdays();
   loadSteps();
@@ -4878,6 +4668,18 @@ onUnmounted(() => {
 .fhub-icon { font-size: 2rem; margin-bottom: 0.5rem; }
 .fhub-card h4 { margin: 0 0 0.25rem; font-size: 0.95rem; color: rgba(255,255,255,0.9); }
 .fhub-card p { margin: 0; font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
+/* Quick Links */
+.quick-links-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+.quick-link-card { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border-radius: 16px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; }
+.journal-link { background: linear-gradient(135deg, rgba(252,182,159,0.1), rgba(255,236,210,0.06)); border-color: rgba(252,182,159,0.25); }
+.journal-link:hover { background: linear-gradient(135deg, rgba(252,182,159,0.18), rgba(255,236,210,0.1)); border-color: rgba(252,182,159,0.4); }
+.meditation-link { background: linear-gradient(135deg, rgba(168,237,234,0.1), rgba(254,214,227,0.06)); border-color: rgba(168,237,234,0.25); }
+.meditation-link:hover { background: linear-gradient(135deg, rgba(168,237,234,0.18), rgba(254,214,227,0.1)); border-color: rgba(168,237,234,0.4); }
+.ql-icon { font-size: 2.2rem; }
+.ql-content h3 { margin: 0 0 0.2rem; font-size: 1.05rem; color: white; }
+.ql-content p { margin: 0; font-size: 0.8rem; color: rgba(255,255,255,0.45); }
+.ql-arrow { margin-left: auto; color: rgba(255,255,255,0.3); width: 1.2rem; height: 1.2rem; }
 
 @media (max-width: 768px) {
   .inspiration-grid { grid-template-columns: 1fr; }

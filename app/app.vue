@@ -1,6 +1,6 @@
 <template>
   <div>
-    <LoadingScreen :isVisible="isLoading" />
+    <LoadingScreen :isVisible="isLoading" :progress="loadProgress" :message="loadMessage" />
     <transition name="page" mode="out-in">
       <NuxtPage v-if="!isLoading" />
     </transition>
@@ -9,12 +9,32 @@
 
 <script setup>
 const isLoading = ref(true);
+const loadProgress = ref(0);
+const loadMessage = ref('Dashboard wird gestartet...');
 
-onMounted(() => {
-  // Simulate initial loading time
-  setTimeout(() => {
-    isLoading.value = false;
-  }, 2500);
+const { restoreToken } = useGoogleAuth();
+
+onMounted(async () => {
+  // Step 1: restore auth tokens immediately
+  loadMessage.value = 'Anmeldung wird wiederhergestellt...';
+  loadProgress.value = 20;
+  try {
+    restoreToken();
+  } catch (e) { /* ignore */ }
+
+  // Step 2: preload weather
+  loadMessage.value = 'Wetterdaten werden geladen...';
+  loadProgress.value = 50;
+  await new Promise(r => setTimeout(r, 200));
+
+  // Step 3: finish
+  loadMessage.value = 'Fast fertig...';
+  loadProgress.value = 90;
+  await new Promise(r => setTimeout(r, 300));
+
+  loadProgress.value = 100;
+  await new Promise(r => setTimeout(r, 300));
+  isLoading.value = false;
 });
 </script>
 
