@@ -630,3 +630,4 @@ onMounted(() => {
   .article-image { height: 130px; }
   .date-pills { display: none; }
 }
+</style>
